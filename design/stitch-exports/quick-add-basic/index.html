@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#f9f9f9",
+                    "on-secondary-fixed": "#001b3f",
+                    "on-secondary-container": "#2d4e85",
+                    "inverse-primary": "#ffb3b0",
+                    "primary": "#b52330",
+                    "surface-container-low": "#f3f3f3",
+                    "secondary-fixed": "#d7e2ff",
+                    "surface": "#f9f9f9",
+                    "secondary-container": "#a2c1ff",
+                    "on-tertiary-fixed": "#002115",
+                    "surface-variant": "#e2e2e2",
+                    "tertiary": "#006c4c",
+                    "on-surface": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "tertiary-fixed-dim": "#59ddaa",
+                    "on-primary-fixed": "#410007",
+                    "on-secondary-fixed-variant": "#24467c",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#ffdad8",
+                    "outline": "#8e706f",
+                    "on-tertiary-fixed-variant": "#005139",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#92001b",
+                    "on-secondary": "#ffffff",
+                    "on-primary-container": "#61000e",
+                    "on-tertiary-container": "#003423",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f1f1",
+                    "secondary-fixed-dim": "#abc7ff",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#b52330",
+                    "outline-variant": "#e2bebc",
+                    "tertiary-container": "#00a879",
+                    "surface-bright": "#f9f9f9",
+                    "surface-container": "#eeeeee",
+                    "primary-container": "#ff5a5f",
+                    "tertiary-fixed": "#78fac4",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#5a403f",
+                    "on-background": "#1a1c1c",
+                    "inverse-surface": "#2f3131",
+                    "secondary": "#3e5e95",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#ffb3b0"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface min-h-screen">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl flex items-center justify-between px-6 py-3 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#B52330]" data-icon="calendar_today">calendar_today</span>
+<h1 class="font-headline font-bold text-lg tracking-tight text-[#3E5E95] dark:text-white">The St. Pete Invitational</h1>
+</div>
+<button class="active:scale-95 transition-transform hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-[#3E5E95] dark:text-white" data-icon="timer">timer</span>
+</button>
+</header>
+<!-- Main Content Background (Mock Leaderboard) -->
+<main class="pt-20 px-6 pb-40 space-y-8">
+<!-- Tournament Hero Card -->
+<div class="relative overflow-hidden rounded-2xl aspect-[16/9] flex flex-col justify-end p-6 shadow-xl">
+<img alt="Event Backdrop" class="absolute inset-0 w-full h-full object-cover grayscale-[0.2]" data-alt="luxury resort golf course at sunset with palm trees and a vibrant pink and blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDKGWsziwRkU8QAKAOI7k4ukE_m3uMQrKhk47v7yN8Bc9N3FVaLcom45AKFVOQQEX7-3_r8zJ4g4NJ7frGVdo5rgoQykd_dkloPgXgkQCdvPf5q-sDPeHhKkuvFzJhLNQdva66NDyZCeUgzaiVyn0YOzPlJVleVLQVJQ_2cqu8rtHw6d5bUM6jjmFT6CjFoZxv4o-YYmrbuaW0IGdtA0QVzG9whjTRpU2p9Go9AZByKFlGy2ybdGwiNbARBKqnmzBopWkfrpfbYko"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="relative z-10">
+<span class="inline-block bg-primary-container text-white text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-2">Live Day 2</span>
+<h2 class="font-headline text-3xl font-extrabold text-white leading-tight">The Captain's<br/>Showdown</h2>
+</div>
+</div>
+<!-- Leaderboard Preview -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<h3 class="font-headline text-xl font-bold text-secondary">Leaderboard</h3>
+<span class="text-on-surface-variant text-sm font-medium">12 Players Active</span>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-transparent">
+<div class="flex items-center gap-4 py-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold">1</div>
+<div class="flex-1">
+<p class="font-headline font-bold text-on-surface">Groom 💍</p>
+<p class="text-xs text-on-surface-variant">Last points: Poker Night</p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-lg text-primary">1,240</p>
+</div>
+</div>
+<div class="flex items-center gap-4 py-3 border-t border-surface-container-high/20">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold">2</div>
+<div class="flex-1">
+<p class="font-headline font-bold text-on-surface">Sam</p>
+<p class="text-xs text-on-surface-variant">Last points: Beer Pong</p>
+</div>
+<div class="text-right">
+<p class="font-headline font-extrabold text-lg text-secondary">1,180</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Invisible but occupies space) -->
+<nav class="fixed bottom-0 w-full z-40 bg-[#f9f9f9]/80 backdrop-blur-xl flex justify-around items-center h-20 px-4 w-full shadow-[0_-4px_12px_rgba(181,35,48,0.06)]">
+<div class="flex flex-col items-center justify-center text-[#3E5E95]/60">
+<span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+<span class="font-label font-semibold text-[10px] uppercase tracking-wider">Scoreboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#B52330]">
+<span class="material-symbols-outlined" data-icon="add" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="font-label font-semibold text-[10px] uppercase tracking-wider">Add</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#3E5E95]/60">
+<span class="material-symbols-outlined" data-icon="book">book</span>
+<span class="font-label font-semibold text-[10px] uppercase tracking-wider">Rules</span>
+</div>
+</nav>
+<!-- Bottom Sheet Backdrop -->
+<div class="fixed inset-0 bg-on-secondary-fixed/40 backdrop-blur-[2px] z-50">
+<!-- Bottom Sheet Container -->
+<div class="absolute bottom-0 left-0 right-0 bg-surface rounded-t-[2.5rem] shadow-2xl flex flex-col max-h-[751px]">
+<!-- Drag Handle -->
+<div class="flex justify-center pt-4 pb-2">
+<div class="w-12 h-1.5 bg-surface-container-highest rounded-full"></div>
+</div>
+<!-- Header -->
+<div class="px-8 pb-4">
+<h2 class="font-headline text-2xl font-black text-secondary tracking-tight">Log Points</h2>
+</div>
+<!-- Content Area -->
+<div class="px-8 pb-8 space-y-8 overflow-y-auto">
+<!-- Row 1: Who are you? -->
+<section class="space-y-3">
+<label class="font-label font-bold text-xs uppercase tracking-widest text-on-surface-variant">Who are you?</label>
+<div class="flex gap-3 overflow-x-auto hide-scrollbar -mx-2 px-2">
+<button class="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-full bg-primary-fixed border-2 border-primary text-primary font-bold active:scale-95 transition-transform">
+<span>Groom 💍</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-container-high transition-colors active:scale-95 transition-transform">
+<span>Dave</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-container-high transition-colors active:scale-95 transition-transform">
+<span>Sam</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-container-high transition-colors active:scale-95 transition-transform">
+<span>Miller</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-full bg-surface-container-low text-on-surface-variant font-semibold hover:bg-surface-container-high transition-colors active:scale-95 transition-transform">
+<span>The Best Man</span>
+</button>
+</div>
+</section>
+<!-- Row 2: Points Stepper -->
+<section class="space-y-3">
+<label class="font-label font-bold text-xs uppercase tracking-widest text-on-surface-variant">Points</label>
+<div class="flex items-center justify-between bg-surface-container-low rounded-2xl p-2">
+<button class="w-14 h-14 rounded-xl bg-surface-container-lowest flex items-center justify-center text-primary active:scale-90 transition-transform shadow-sm">
+<span class="material-symbols-outlined font-bold" data-icon="remove">remove</span>
+</button>
+<div class="flex-1 text-center">
+<span class="font-headline text-5xl font-black text-on-surface">50</span>
+</div>
+<button class="w-14 h-14 rounded-xl bg-primary flex items-center justify-center text-white active:scale-90 transition-transform shadow-md">
+<span class="material-symbols-outlined font-bold" data-icon="add">add</span>
+</button>
+</div>
+</section>
+<!-- Row 3: Description -->
+<section class="space-y-3">
+<label class="font-label font-bold text-xs uppercase tracking-widest text-on-surface-variant">Description</label>
+<div class="relative">
+<textarea class="w-full bg-surface-container-low border-none rounded-2xl p-4 font-body text-on-surface focus:ring-2 focus:ring-primary-container focus:bg-surface-container-lowest transition-all placeholder:text-on-surface-variant/40" placeholder="What happened? (e.g. beer pong W)" rows="2"></textarea>
+</div>
+</section>
+<!-- CTA and Footer -->
+<div class="pt-2 space-y-4">
+<button class="w-full bg-primary-container text-white py-5 rounded-full font-headline font-extrabold text-lg shadow-[0_8px_24px_rgba(255,90,95,0.25)] active:scale-95 transition-transform">
+                        Add Points
+                    </button>
+<div class="text-center">
+<a class="inline-flex items-center gap-1 font-label text-sm font-semibold text-secondary hover:text-primary transition-colors py-2" href="#">
+<span>Advanced (activity result / Captain Bank)</span>
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Home Indicator (iOS style) -->
+<div class="flex justify-center pb-2">
+<div class="w-32 h-1 bg-on-surface/10 rounded-full"></div>
+</div>
+</div>
+</div>
+</body></html>

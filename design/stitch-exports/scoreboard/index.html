@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#f9f9f9",
+                    "on-secondary-fixed": "#001b3f",
+                    "on-secondary-container": "#2d4e85",
+                    "inverse-primary": "#ffb3b0",
+                    "primary": "#b52330",
+                    "surface-container-low": "#f3f3f3",
+                    "secondary-fixed": "#d7e2ff",
+                    "surface": "#f9f9f9",
+                    "secondary-container": "#a2c1ff",
+                    "on-tertiary-fixed": "#002115",
+                    "surface-variant": "#e2e2e2",
+                    "tertiary": "#006c4c",
+                    "on-surface": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "tertiary-fixed-dim": "#59ddaa",
+                    "on-primary-fixed": "#410007",
+                    "on-secondary-fixed-variant": "#24467c",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#ffdad8",
+                    "outline": "#8e706f",
+                    "on-tertiary-fixed-variant": "#005139",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed-variant": "#92001b",
+                    "on-secondary": "#ffffff",
+                    "on-primary-container": "#61000e",
+                    "on-tertiary-container": "#003423",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f1f1",
+                    "secondary-fixed-dim": "#abc7ff",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#b52330",
+                    "outline-variant": "#e2bebc",
+                    "tertiary-container": "#00a879",
+                    "surface-bright": "#f9f9f9",
+                    "surface-container": "#eeeeee",
+                    "primary-container": "#ff5a5f",
+                    "tertiary-fixed": "#78fac4",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#5a403f",
+                    "on-background": "#1a1c1c",
+                    "inverse-surface": "#2f3131",
+                    "secondary": "#3e5e95",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#ffb3b0"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-depth {
+            background-color: #f9f9f9;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- Top Status Bar (Contextual/Linear Header) -->
+<div class="fixed top-0 left-0 w-full z-[60] px-6 py-2 bg-secondary text-white flex justify-between items-center text-[11px] font-bold tracking-widest uppercase">
+<span>Day 2 of 3</span>
+<div class="flex items-center gap-2">
+<span class="opacity-70">Next Draw:</span>
+<span>2h 45m</span>
+</div>
+</div>
+<!-- TopAppBar -->
+<header class="fixed top-8 w-full z-50 bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl flex items-center justify-between px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#FF5A5F]" data-icon="calendar_today">calendar_today</span>
+<h1 class="font-['Manrope'] font-black text-xl tracking-tight text-[#3E5E95]">The St. Pete Invitational</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-500 hover:opacity-80 transition-opacity active:scale-95 transition-transform" data-icon="settings">settings</span>
+<span class="material-symbols-outlined text-[#FF5A5F]" data-icon="timer">timer</span>
+</div>
+</header>
+<main class="pt-28 pb-32 px-5 max-w-2xl mx-auto space-y-6">
+<!-- Scoreboard Title Section -->
+<section class="mb-8">
+<h2 class="font-headline font-extrabold text-4xl text-secondary leading-tight">Current Standings</h2>
+<p class="font-body text-on-surface-variant mt-1">Live updates from the St. Petersburg fields.</p>
+</section>
+<!-- Team Card 1: Leader -->
+<div class="group relative bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] border-l-4 border-primary overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-8 -mt-8 -z-0"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<span class="bg-primary text-white font-headline font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-tighter">1st</span>
+<h3 class="font-headline font-bold text-2xl text-on-surface">The Barracudas</h3>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline font-extrabold text-5xl text-primary tracking-tighter">242</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">Points</span>
+</div>
+</div>
+<div class="mb-6">
+<div class="flex justify-between items-end mb-2">
+<span class="text-xs font-semibold text-on-surface-variant">18 pts to next draw</span>
+<span class="text-[10px] font-medium text-secondary bg-secondary-fixed px-2 py-0.5 rounded-full">2 held · 1 active</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[82%]"></div>
+</div>
+</div>
+<!-- Expanded Content Simulation -->
+<div class="pt-4 border-t border-surface-container space-y-3">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold">Groom 💍</span>
+<span class="text-xs text-on-surface-variant opacity-60">·</span>
+<span class="text-xs text-on-surface-variant">52 pts</span>
+</div>
+<span class="text-[11px] font-medium text-tertiary">(cornhole W · 5 pts)</span>
+</div>
+<div class="flex justify-between items-center opacity-70">
+<div class="flex items-center gap-2">
+<span class="text-sm font-semibold">Player 2</span>
+<span class="text-xs text-on-surface-variant opacity-60">·</span>
+<span class="text-xs text-on-surface-variant">48 pts</span>
+</div>
+<span class="text-[11px] font-medium text-secondary">(shot · 2 pts)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Team Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all border-l-4 border-secondary/40">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<span class="bg-secondary/10 text-secondary font-headline font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-tighter">2nd</span>
+<h3 class="font-headline font-bold text-2xl text-on-surface">Harbor Sharks</h3>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline font-extrabold text-5xl text-on-surface tracking-tighter">218</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">Points</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex gap-2">
+<span class="text-[10px] font-medium text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">4 players</span>
+<span class="text-[10px] font-medium text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">3 active</span>
+</div>
+<button class="text-xs font-bold text-secondary flex items-center gap-1">
+                    Details <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+<!-- Team Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all border-l-4 border-surface-container-highest">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<span class="bg-surface-container text-on-surface-variant font-headline font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-tighter">3rd</span>
+<h3 class="font-headline font-bold text-2xl text-on-surface">The Pelican Club</h3>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-headline font-extrabold text-5xl text-on-surface tracking-tighter">195</span>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mt-1">Points</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex gap-2">
+<span class="text-[10px] font-medium text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">5 players</span>
+<span class="text-[10px] font-medium text-on-surface-variant bg-surface-container px-2 py-1 rounded-full">0 active</span>
+</div>
+<button class="text-xs font-bold text-secondary flex items-center gap-1">
+                    Details <span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+<!-- Additional Editorial Insight (Bento-lite) -->
+<div class="grid grid-cols-2 gap-4 mt-8">
+<div class="bg-tertiary-container/10 p-5 rounded-xl">
+<span class="material-symbols-outlined text-tertiary mb-2" data-icon="trending_up">trending_up</span>
+<p class="text-xs font-bold text-tertiary uppercase tracking-wider">Fastest Mover</p>
+<p class="font-headline font-bold text-lg mt-1 text-on-tertiary-container">Groom 💍</p>
+<p class="text-[10px] text-tertiary-container-variant">+12 pts last hour</p>
+</div>
+<div class="bg-primary-fixed/30 p-5 rounded-xl">
+<span class="material-symbols-outlined text-primary mb-2" data-icon="sports_esports">sports_esports</span>
+<p class="text-xs font-bold text-primary uppercase tracking-wider">Active Event</p>
+<p class="font-headline font-bold text-lg mt-1 text-on-primary-container">Mega Cornhole</p>
+<p class="text-[10px] text-primary">Live Scoreboard</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl flex justify-around items-center h-20 px-4 w-full shadow-[0_-4px_12px_rgba(181,35,48,0.06)]">
+<!-- Scoreboard - Active State -->
+<a class="flex flex-col items-center justify-center text-[#B52330] dark:text-[#FF5A5F] hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="bar_chart" style="font-variation-settings: 'FILL' 1;">bar_chart</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider">Scoreboard</span>
+</a>
+<!-- Oversized Center FAB -->
+<div class="relative -top-6">
+<button class="bg-[#FF5A5F] text-white p-4 rounded-full shadow-[0_8px_20px_rgba(181,35,48,0.3)] active:scale-95 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 font-['Inter'] font-semibold text-[10px] uppercase tracking-wider text-[#3E5E95]/60">Add</span>
+</div>
+<!-- Rules -->
+<a class="flex flex-col items-center justify-center text-[#3E5E95]/60 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="book">book</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider">Rules</span>
+</a>
+</nav>
+</body></html>

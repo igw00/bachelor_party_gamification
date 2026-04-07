@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The St. Pete Invitational - Draw Teams</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f9f9f9",
+                        "on-secondary-fixed": "#001b3f",
+                        "on-secondary-container": "#2d4e85",
+                        "inverse-primary": "#ffb3b0",
+                        "primary": "#b52330",
+                        "surface-container-low": "#f3f3f3",
+                        "secondary-fixed": "#d7e2ff",
+                        "surface": "#f9f9f9",
+                        "secondary-container": "#a2c1ff",
+                        "on-tertiary-fixed": "#002115",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary": "#006c4c",
+                        "on-surface": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary-fixed-dim": "#59ddaa",
+                        "on-primary-fixed": "#410007",
+                        "on-secondary-fixed-variant": "#24467c",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "primary-fixed": "#ffdad8",
+                        "outline": "#8e706f",
+                        "on-tertiary-fixed-variant": "#005139",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#92001b",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#61000e",
+                        "on-tertiary-container": "#003423",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "secondary-fixed-dim": "#abc7ff",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#b52330",
+                        "outline-variant": "#e2bebc",
+                        "tertiary-container": "#00a879",
+                        "surface-bright": "#f9f9f9",
+                        "surface-container": "#eeeeee",
+                        "primary-container": "#ff5a5f",
+                        "tertiary-fixed": "#78fac4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#5a403f",
+                        "on-background": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "secondary": "#3e5e95",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb3b0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-depth {
+            box-shadow: 0 4px 20px -4px rgba(62, 94, 149, 0.08);
+        }
+        .soft-blur {
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed">
+<!-- Top Navigation Anchor (Suppressed based on Transactional Flow, but Header Title remains for Branding) -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl flex items-center justify-between px-6 py-3 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#FF5A5F]" data-icon="calendar_today">calendar_today</span>
+<span class="font-headline font-bold text-lg tracking-tight text-[#3E5E95]">The St. Pete Invitational</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-500" data-icon="timer">timer</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-5xl mx-auto">
+<!-- Editorial Header Section -->
+<section class="mb-12">
+<div class="flex flex-col gap-2">
+<span class="font-label text-primary font-bold tracking-[0.2em] uppercase text-[10px]">Setup Flow: Step 02</span>
+<h1 class="font-headline font-extrabold text-4xl md:text-5xl text-secondary tracking-tight">Draw Your Teams</h1>
+<p class="font-body text-on-surface-variant max-w-md mt-2 leading-relaxed">The algorithm has spoken. Assign team names and confirm the roster for the upcoming rounds.</p>
+</div>
+</section>
+<!-- Team Grid - Asymmetric Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Team A Column -->
+<div class="flex flex-col gap-6">
+<div class="group cursor-pointer">
+<div class="flex items-center gap-2 mb-2">
+<input class="font-headline font-bold text-xl bg-transparent border-none focus:ring-0 text-secondary p-0 w-full hover:bg-surface-container-low rounded-lg transition-colors" placeholder="Rename Team..." type="text" value="Team A"/>
+<span class="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors" data-icon="edit">edit</span>
+</div>
+<div class="h-1 w-12 bg-primary-container rounded-full"></div>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Captain Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth border-l-4 border-primary">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-sm">JS</div>
+<div>
+<p class="font-headline font-bold text-secondary">Julian Smith</p>
+<p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest mt-0.5">Captain</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+<!-- Member Cards -->
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold text-sm">MC</div>
+<p class="font-headline font-bold text-secondary">Marcus Chen</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold text-sm">DB</div>
+<p class="font-headline font-bold text-secondary">David Brooks</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Team B Column (Elevated Visual State) -->
+<div class="flex flex-col gap-6">
+<div class="group cursor-pointer">
+<div class="flex items-center gap-2 mb-2">
+<input class="font-headline font-bold text-xl bg-transparent border-none focus:ring-0 text-secondary p-0 w-full hover:bg-surface-container-low rounded-lg transition-colors" placeholder="Rename Team..." type="text" value="Team B"/>
+<span class="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors" data-icon="edit">edit</span>
+</div>
+<div class="h-1 w-12 bg-primary-container rounded-full"></div>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Captain Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth border-l-4 border-primary">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-sm">AR</div>
+<div>
+<p class="font-headline font-bold text-secondary">Alex Rivera</p>
+<p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest mt-0.5">Captain</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+<!-- Member Cards -->
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold text-sm">TW</div>
+<p class="font-headline font-bold text-secondary">Tyler Wade</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold text-sm">LH</div>
+<p class="font-headline font-bold text-secondary">Leo Harris</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Team C Column -->
+<div class="flex flex-col gap-6">
+<div class="group cursor-pointer">
+<div class="flex items-center gap-2 mb-2">
+<input class="font-headline font-bold text-xl bg-transparent border-none focus:ring-0 text-secondary p-0 w-full hover:bg-surface-container-low rounded-lg transition-colors" placeholder="Rename Team..." type="text" value="Team C"/>
+<span class="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors" data-icon="edit">edit</span>
+</div>
+<div class="h-1 w-12 bg-primary-container rounded-full"></div>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Captain Card -->
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth border-l-4 border-primary">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-sm">SM</div>
+<div>
+<p class="font-headline font-bold text-secondary">Sam Miller</p>
+<p class="font-label text-[10px] text-primary font-bold uppercase tracking-widest mt-0.5">Captain</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+<!-- Member Cards -->
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold text-sm">KG</div>
+<p class="font-headline font-bold text-secondary">Kevin Grahams</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl tonal-depth">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold text-sm">PJ</div>
+<p class="font-headline font-bold text-secondary">Pete Jackson</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Animation Placeholder Card (Visualized Editorial Depth) -->
+<div class="mt-16 bg-secondary-container/20 rounded-3xl p-8 border-2 border-dashed border-secondary/20 flex flex-col items-center justify-center text-center">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center tonal-depth mb-4">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="shuffle">shuffle</span>
+</div>
+<h3 class="font-headline font-bold text-secondary text-xl">Redraw Necessary?</h3>
+<p class="font-body text-on-secondary-container max-w-xs mt-2 text-sm">If these pairings don't feel right, you can shuffle one more time before we lock the brackets.</p>
+<button class="mt-6 px-6 py-3 bg-secondary text-white rounded-full font-headline font-bold text-sm hover:opacity-90 active:scale-95 transition-all">
+                Shuffle Again
+            </button>
+</div>
+</main>
+<!-- Bottom Action Bar (Contextual Suppression for Transactional flow, replaced with centered FAB) -->
+<div class="fixed bottom-0 left-0 right-0 p-6 flex justify-center bg-gradient-to-t from-background via-background/90 to-transparent pointer-events-none">
+<button class="pointer-events-auto bg-[#ff5a5f] text-white px-10 py-4 rounded-full font-headline font-extrabold text-base flex items-center gap-3 shadow-[0_12px_24px_rgba(181,35,48,0.2)] active:scale-95 transition-transform">
+            Confirm &amp; Continue
+            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Background Decoration (Airbnb-style Soft Elements) -->
+<div class="fixed top-[-10%] right-[-5%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] -z-10"></div>
+<div class="fixed bottom-[-5%] left-[-10%] w-[30%] h-[30%] bg-secondary/5 rounded-full blur-[100px] -z-10"></div>
+</body></html>

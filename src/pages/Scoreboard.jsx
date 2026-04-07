@@ -1,0 +1,100 @@
+import { useNavigate } from 'react-router-dom'
+import { useTeams } from '../hooks/useTeams'
+import { usePlayers } from '../hooks/usePlayers'
+import { useCards } from '../hooks/useCards'
+import { useCompetition } from '../hooks/useCompetition'
+import { useCollection } from '../hooks/useFirestore'
+import useStore from '../store/useStore'
+import TeamCard from '../components/scoreboard/TeamCard'
+import { useCallback } from 'react'
+
+export default function Scoreboard() {
+  const navigate = useNavigate()
+  const { teams } = useTeams()
+  const { players } = usePlayers()
+  const { cards } = useCards()
+  const { competition } = useCompetition()
+  const { events, setEvents } = useStore()
+
+  useCollection('events', useCallback(setEvents, [setEvents]))
+
+  const sortedTeams = [...teams].sort((a, b) => (b.totalPoints ?? 0) - (a.totalPoints ?? 0))
+
+  // Fastest mover: player with most points in last 5 events
+  const recentEvents = [...events]
+    .sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0))
+    .slice(0, 10)
+
+  const moveCounts = {}
+  recentEvents.forEach((e) => {
+    if (e.playerId) moveCounts[e.playerId] = (moveCounts[e.playerId] || 0) + (e.pointsIndividual || 0)
+  })
+  const fastestMoverId = Object.entries(moveCounts).sort((a, b) => b[1] - a[1])[0]?.[0]
+  const fastestMover = players.find((p) => p.id === fastestMoverId)
+
+  return (
+    <main className="pt-28 pb-32 px-5 max-w-2xl mx-auto space-y-4">
+      {/* Title */}
+      <section className="mb-6">
+        <h2 className="font-headline font-extrabold text-4xl text-secondary leading-tight">
+          Current Standings
+        </h2>
+        <p className="font-body text-on-surface-variant mt-1">
+          Live updates from the St. Petersburg fields.
+        </p>
+      </section>
+
+      {sortedTeams.length === 0 && (
+        <div className="bg-surface-container-lowest rounded-xl p-8 text-center shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+          <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">
+            sports
+          </span>
+          <p className="font-headline font-bold text-lg text-on-surface mb-1">No teams yet</p>
+          <p className="text-sm text-on-surface-variant mb-4">Complete setup to get started.</p>
+          <button
+            onClick={() => navigate('/setup')}
+            className="bg-primary-container text-on-primary font-bold px-6 py-3 rounded-full text-sm active:scale-95 transition-transform"
+          >
+            Go to Setup
+          </button>
+        </div>
+      )}
+
+      {sortedTeams.map((team, i) => (
+        <TeamCard
+          key={team.id}
+          team={team}
+          rank={i}
+          players={players}
+          cards={cards}
+          events={events}
+        />
+      ))}
+
+      {/* Bento insight cards */}
+      {sortedTeams.length > 0 && (
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="bg-tertiary-container/10 p-5 rounded-xl">
+            <span className="material-symbols-outlined text-tertiary mb-2 block">trending_up</span>
+            <p className="text-xs font-bold text-tertiary uppercase tracking-wider">Fastest Mover</p>
+            <p className="font-headline font-bold text-lg mt-1 text-on-tertiary-container">
+              {fastestMover
+                ? fastestMover.isGroom
+                  ? `${fastestMover.name} 💍`
+                  : fastestMover.name
+                : '—'}
+            </p>
+          </div>
+          <div className="bg-primary-fixed/30 p-5 rounded-xl">
+            <span className="material-symbols-outlined text-primary mb-2 block">emoji_events</span>
+            <p className="text-xs font-bold text-primary uppercase tracking-wider">Day {competition?.currentDay ?? 1}</p>
+            <p className="font-headline font-bold text-lg mt-1 text-on-primary-container">
+              {sortedTeams[0]?.name ?? '—'}
+            </p>
+            <p className="text-[10px] text-primary">Leading</p>
+          </div>
+        </div>
+      )}
+    </main>
+  )
+}

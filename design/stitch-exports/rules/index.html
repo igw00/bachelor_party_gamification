@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rules | The St. Pete Invitational</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f9f9f9",
+                        "on-secondary-fixed": "#001b3f",
+                        "on-secondary-container": "#2d4e85",
+                        "inverse-primary": "#ffb3b0",
+                        "primary": "#b52330",
+                        "surface-container-low": "#f3f3f3",
+                        "secondary-fixed": "#d7e2ff",
+                        "surface": "#f9f9f9",
+                        "secondary-container": "#a2c1ff",
+                        "on-tertiary-fixed": "#002115",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary": "#006c4c",
+                        "on-surface": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary-fixed-dim": "#59ddaa",
+                        "on-primary-fixed": "#410007",
+                        "on-secondary-fixed-variant": "#24467c",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "primary-fixed": "#ffdad8",
+                        "outline": "#8e706f",
+                        "on-tertiary-fixed-variant": "#005139",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#92001b",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#61000e",
+                        "on-tertiary-container": "#003423",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "secondary-fixed-dim": "#abc7ff",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#b52330",
+                        "outline-variant": "#e2bebc",
+                        "tertiary-container": "#00a879",
+                        "surface-bright": "#f9f9f9",
+                        "surface-container": "#eeeeee",
+                        "primary-container": "#ff5a5f",
+                        "tertiary-fixed": "#78fac4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#5a403f",
+                        "on-background": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "secondary": "#3e5e95",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb3b0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl flex items-center justify-between px-6 py-3 w-full">
+<div class="flex items-center gap-3 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[#FF5A5F]">calendar_today</span>
+<span class="font-['Manrope'] font-bold text-lg tracking-tight text-[#3E5E95]">The St. Pete Invitational</span>
+</div>
+<div class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-zinc-500">timer</span>
+</div>
+</header>
+<main class="pt-20 pb-32">
+<!-- Quick Ref Horizontal Scroll -->
+<section class="mb-10">
+<div class="px-6 mb-4">
+<h2 class="text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant">Quick Reference</h2>
+</div>
+<div class="flex overflow-x-auto gap-4 px-6 no-scrollbar pb-4">
+<!-- Card 1: Prize Pool -->
+<div class="flex-none w-72 bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">payments</span>
+<h3 class="font-bold text-secondary">Prize Pool</h3>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">1st Place</span>
+<span class="font-bold text-primary">$1,200</span>
+</div>
+<div class="h-px bg-surface-container"></div>
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">2nd Place</span>
+<span class="font-bold text-secondary">$600</span>
+</div>
+<div class="h-px bg-surface-container"></div>
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">3rd Place</span>
+<span class="font-bold text-on-surface-variant">$200</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Activity Points -->
+<div class="flex-none w-72 bg-surface-container-lowest rounded-xl p-5 shadow-sm border-l-4 border-primary">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">stars</span>
+<h3 class="font-bold text-secondary">Activity Points</h3>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">Par Completion</span>
+<span class="font-bold text-tertiary">+50</span>
+</div>
+<div class="h-px bg-surface-container"></div>
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">Fastest Finish</span>
+<span class="font-bold text-tertiary">+100</span>
+</div>
+<div class="h-px bg-surface-container"></div>
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">Clean Game</span>
+<span class="font-bold text-tertiary">+25</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Card Draws -->
+<div class="flex-none w-72 bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">playing_cards</span>
+<h3 class="font-bold text-secondary">Card Draws</h3>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">Royal Flush</span>
+<span class="font-bold text-primary">Instant Win</span>
+</div>
+<div class="h-px bg-surface-container"></div>
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">Three of a Kind</span>
+<span class="font-bold text-secondary">x2 Multi</span>
+</div>
+<div class="h-px bg-surface-container"></div>
+<div class="flex justify-between text-xs py-1">
+<span class="text-on-surface-variant">Full House</span>
+<span class="font-bold text-secondary">+500 pts</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Rulebook area -->
+<section class="px-6 space-y-4">
+<div class="mb-8">
+<h1 class="text-4xl font-extrabold tracking-tight text-secondary leading-tight">Official Rulebook</h1>
+<p class="text-on-surface-variant mt-2 font-medium">Edition 2024.2 • St. Petersburg, FL</p>
+</div>
+<!-- Section 1: Overview -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-none overflow-hidden transition-all duration-300 open:shadow-lg" open="">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-primary bg-primary-fixed w-8 h-8 flex items-center justify-center rounded-full">01</span>
+<h3 class="text-xl font-bold text-secondary">Overview</h3>
+</div>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-secondary">expand_more</span>
+</summary>
+<div class="px-6 pb-8 text-on-surface-variant leading-relaxed space-y-4 max-w-2xl mx-auto">
+<p class="text-lg">The St. Pete Invitational is a multi-disciplinary competitive event designed to test endurance, strategy, and social wit. Participants compete across three days of intense activity.</p>
+<p>The primary goal is the accumulation of "Invitational Points" through a combination of physical challenges, tactical voting, and luck-based card draws. The competition maintains a strict code of conduct emphasizing sportsmanship and gentlemanly behavior.</p>
+<div class="p-4 bg-surface-container-low rounded-lg italic text-sm border-l-4 border-secondary">
+                        "Victory belongs to the most persevering, but glory belongs to the most gracious."
+                    </div>
+</div>
+</details>
+<!-- Section 2: Prize Pool -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-none overflow-hidden transition-all duration-300 open:shadow-lg">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-primary bg-primary-fixed w-8 h-8 flex items-center justify-center rounded-full">02</span>
+<h3 class="text-xl font-bold text-secondary">Prize Pool</h3>
+</div>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-secondary">expand_more</span>
+</summary>
+<div class="px-6 pb-8 text-on-surface-variant leading-relaxed space-y-4 max-w-2xl mx-auto">
+<p>The 2024 Purse is set at a total of $2,000 USD, funded through participant entry fees and local sponsorship. Distribution is as follows:</p>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<div>
+<strong class="text-on-surface">Grand Champion:</strong>
+                                60% of total purse ($1,200), the Invitational Trophy, and naming rights for next year's opening challenge.
+                            </div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<div>
+<strong class="text-on-surface">Runner Up:</strong>
+                                30% of total purse ($600).
+                            </div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<div>
+<strong class="text-on-surface">Third Place:</strong>
+                                10% of total purse ($200).
+                            </div>
+</li>
+</ul>
+</div>
+</details>
+<!-- Section 3: Gameplay -->
+<details class="group bg-surface-container-lowest rounded-xl shadow-none overflow-hidden transition-all duration-300 open:shadow-lg">
+<summary class="flex items-center justify-between p-6 cursor-pointer list-none">
+<div class="flex items-center gap-4">
+<span class="text-xs font-bold text-primary bg-primary-fixed w-8 h-8 flex items-center justify-center rounded-full">03</span>
+<h3 class="text-xl font-bold text-secondary">Gameplay</h3>
+</div>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-secondary">expand_more</span>
+</summary>
+<div class="px-6 pb-8 text-on-surface-variant leading-relaxed space-y-6 max-w-2xl mx-auto">
+<div>
+<h4 class="font-bold text-on-surface mb-2">Phase A: The Morning Scramble</h4>
+<p>Contestants must check-in via the app by 08:00 EST. Failure to check-in results in a 10-point penalty. The first challenge is always an endurance-based movement task within the St. Petersburg downtown corridor.</p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container p-4 rounded-xl">
+<span class="text-xs font-bold text-secondary uppercase block mb-1">Scoring Metric</span>
+<p class="text-xl font-black text-primary">Time + Accuracy</p>
+</div>
+<div class="bg-surface-container p-4 rounded-xl">
+<span class="text-xs font-bold text-secondary uppercase block mb-1">Gear Required</span>
+<p class="text-xl font-black text-primary">Invitational Kit</p>
+</div>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-2">Phase B: Tactical Deliberation</h4>
+<p>Afternoon sessions focus on seated strategy. Participants will use the "Add" function in the app to submit scores from mini-games. All submissions must be verified by at least one other participant (The Peer-Review Rule).</p>
+</div>
+<div class="p-6 bg-secondary-container/20 rounded-xl">
+<h5 class="text-secondary font-bold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">warning</span>
+                            Disqualification Clause
+                        </h5>
+<p class="text-xs leading-relaxed text-on-secondary-container">Any participant caught manipulating score entry or bypass the Peer-Review verification will be immediately relegated to the 'Spectator' class for the remainder of the Invitational.</p>
+</div>
+</div>
+</details>
+</section>
+<!-- Decorative Ending -->
+<div class="px-6 py-16 text-center">
+<div class="w-16 h-px bg-surface-container-highest mx-auto mb-6"></div>
+<p class="text-on-surface-variant text-sm italic font-['Manrope']">Established in St. Petersburg, Florida.<br/>Integrity above all.</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl flex justify-around items-center h-20 px-4 w-full pb-safe shadow-[0_-4px_12px_rgba(181,35,48,0.06)]">
+<a class="flex flex-col items-center justify-center text-[#3E5E95]/60 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors p-2 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider mt-1">Scoreboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#3E5E95]/60 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors p-2 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider mt-1">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#B52330] dark:text-[#FF5A5F] hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors p-2 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="book" style="font-variation-settings: 'FILL' 1;">book</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider mt-1">Rules</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The St. Pete Invitational - Quick Add</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f9f9f9",
+                        "on-secondary-fixed": "#001b3f",
+                        "on-secondary-container": "#2d4e85",
+                        "inverse-primary": "#ffb3b0",
+                        "primary": "#b52330",
+                        "surface-container-low": "#f3f3f3",
+                        "secondary-fixed": "#d7e2ff",
+                        "surface": "#f9f9f9",
+                        "secondary-container": "#a2c1ff",
+                        "on-tertiary-fixed": "#002115",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary": "#006c4c",
+                        "on-surface": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary-fixed-dim": "#59ddaa",
+                        "on-primary-fixed": "#410007",
+                        "on-secondary-fixed-variant": "#24467c",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "primary-fixed": "#ffdad8",
+                        "outline": "#8e706f",
+                        "on-tertiary-fixed-variant": "#005139",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#92001b",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#61000e",
+                        "on-tertiary-container": "#003423",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f1f1",
+                        "secondary-fixed-dim": "#abc7ff",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#b52330",
+                        "outline-variant": "#e2bebc",
+                        "tertiary-container": "#00a879",
+                        "surface-bright": "#f9f9f9",
+                        "surface-container": "#eeeeee",
+                        "primary-container": "#ff5a5f",
+                        "tertiary-fixed": "#78fac4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#5a403f",
+                        "on-background": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "secondary": "#3e5e95",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#ffb3b0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+        }
+        .headline-font {
+            font-family: 'Manrope', sans-serif;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl flex items-center justify-between px-6 py-3 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#FF5A5F]" data-icon="calendar_today">calendar_today</span>
+<h1 class="font-['Manrope'] font-bold text-lg tracking-tight text-on-surface">The St. Pete Invitational</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="material-symbols-outlined text-zinc-500 hover:opacity-80 transition-opacity active:scale-95 transition-transform" data-icon="timer">timer</button>
+</div>
+</header>
+<!-- Main Content: Full Screen Bottom Sheet Container -->
+<main class="min-h-screen pt-16 pb-24 px-4 sm:px-6 max-w-2xl mx-auto">
+<!-- Header Section -->
+<div class="mt-8 mb-10 flex items-end justify-between">
+<div>
+<span class="text-xs font-bold uppercase tracking-widest text-[#FF5A5F] mb-2 block">Quick Action</span>
+<h2 class="headline-font text-4xl font-extrabold tracking-tight text-secondary">Add Entry</h2>
+</div>
+<div class="pb-1">
+<button class="p-2 rounded-full surface-container-high hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined block" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Form Area -->
+<div class="space-y-12">
+<!-- Section 1: Player Selection -->
+<section>
+<h3 class="headline-font text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
+<span class="w-1.5 h-6 bg-[#FF5A5F] rounded-full"></span>
+                    Select Player
+                </h3>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-2.5 rounded-full bg-secondary text-white font-semibold text-sm flex items-center gap-2 shadow-sm transition-transform active:scale-95">
+<div class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">JD</div>
+                        Jack Daniels
+                    </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-lowest border border-surface-container text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-container transition-colors transition-transform active:scale-95">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-[10px]">MS</div>
+                        Mike Smith
+                    </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-lowest border border-surface-container text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-container transition-colors transition-transform active:scale-95">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-[10px]">TB</div>
+                        Tom Brady
+                    </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-lowest border border-surface-container text-on-surface-variant font-medium text-sm flex items-center gap-2 hover:bg-surface-container transition-colors transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Others
+                    </button>
+</div>
+</section>
+<!-- Section 2: Points & Description -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<h3 class="headline-font text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
+<span class="w-1.5 h-6 bg-[#3E5E95] rounded-full"></span>
+                        Points
+                    </h3>
+<div class="flex items-center justify-between p-4 rounded-xl bg-surface-container-lowest border border-surface-container-low shadow-sm">
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-high text-secondary active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="headline-font text-4xl font-black text-secondary">25</span>
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-secondary text-white shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+<div>
+<h3 class="headline-font text-lg font-bold text-on-surface mb-6">Entry Label</h3>
+<div class="relative">
+<input class="w-full px-4 py-4 bg-surface-container-lowest border-0 rounded-xl shadow-sm focus:ring-2 focus:ring-primary/20 text-on-surface font-medium placeholder:text-zinc-400" placeholder="e.g. Birdie on 14" type="text"/>
+</div>
+</div>
+</section>
+<!-- Section 3: Advanced Activity (Bento Layout) -->
+<section>
+<div class="flex items-baseline justify-between mb-6">
+<h3 class="headline-font text-lg font-bold text-on-surface">Advanced Activity</h3>
+<span class="text-xs font-bold text-tertiary px-2 py-1 bg-tertiary-container rounded-full">Bonus Points</span>
+</div>
+<div class="grid grid-cols-6 grid-rows-2 gap-4 h-64">
+<!-- Activity Selector Chips -->
+<div class="col-span-4 row-span-2 p-6 rounded-2xl bg-surface-container-low flex flex-col justify-between">
+<label class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Type of challenge</label>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-[#FF5A5F] text-white shadow-lg active:scale-[0.98] transition-transform">
+<span class="font-bold">Drinking Game</span>
+<span class="material-symbols-outlined" data-icon="sports_bar" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sports_bar</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-surface-container-lowest text-on-surface-variant border border-surface-container active:scale-[0.98] transition-transform">
+<span class="font-medium">Physical Challenge</span>
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 rounded-xl bg-surface-container-lowest text-on-surface-variant border border-surface-container active:scale-[0.98] transition-transform">
+<span class="font-medium">Side Quest</span>
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</button>
+</div>
+</div>
+<!-- Multiplier -->
+<div class="col-span-2 row-span-1 p-5 rounded-2xl bg-secondary-fixed text-on-secondary-fixed flex flex-col items-center justify-center text-center">
+<span class="text-[10px] font-black uppercase tracking-tighter opacity-70 mb-1">Multiplier</span>
+<div class="flex items-baseline">
+<span class="text-sm font-bold">x</span>
+<span class="headline-font text-3xl font-black">2.0</span>
+</div>
+</div>
+<!-- Side Toggle Button -->
+<div class="col-span-2 row-span-1 p-5 rounded-2xl bg-surface-container-lowest border border-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="bolt">bolt</span>
+</div>
+</div>
+</section>
+<!-- Section 4: Captain Bank Toggle -->
+<section class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h4 class="headline-font font-bold text-on-surface">Captain Bank</h4>
+<p class="text-xs text-on-surface-variant">Allocate points to team reserve or player</p>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<div class="w-14 h-8 bg-primary rounded-full p-1 transition-colors duration-200">
+<div class="w-6 h-6 bg-white rounded-full translate-x-6"></div>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 p-3 rounded-lg bg-primary-fixed/30 border border-primary-fixed text-center">
+<span class="text-xs font-bold text-primary">Direct to Player</span>
+</div>
+<div class="flex-1 p-3 rounded-lg bg-surface-container text-center grayscale opacity-40">
+<span class="text-xs font-bold text-on-surface-variant">Add to Bank</span>
+</div>
+</div>
+</section>
+<!-- Final Confirmation Button -->
+<section class="pt-6 pb-12">
+<button class="w-full h-16 bg-[#B52330] text-white rounded-full headline-font font-black text-lg flex items-center justify-center gap-3 shadow-[0_8px_20px_rgba(181,35,48,0.2)] active:scale-95 transition-transform">
+<span>Confirm Entry</span>
+<span class="material-symbols-outlined" data-icon="done_all">done_all</span>
+</button>
+<p class="text-center text-xs text-zinc-400 mt-6 font-medium">This entry will be recorded in the live tournament log.</p>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-[#f9f9f9]/80 dark:bg-zinc-950/80 backdrop-blur-xl shadow-[0_-4px_12px_rgba(181,35,48,0.06)] flex justify-around items-center h-20 px-4 w-full">
+<a class="flex flex-col items-center justify-center text-[#3E5E95]/60 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors active:scale-90 transition-transform duration-200 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider">Scoreboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#B52330] dark:text-[#FF5A5F] hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors active:scale-90 transition-transform duration-200 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="add" data-weight="fill" style="font-variation-settings: 'FILL' 1;">add</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#3E5E95]/60 dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors active:scale-90 transition-transform duration-200 p-2" href="#">
+<span class="material-symbols-outlined" data-icon="book">book</span>
+<span class="font-['Inter'] font-semibold text-[10px] uppercase tracking-wider">Rules</span>
+</a>
+</nav>
+</body></html>
