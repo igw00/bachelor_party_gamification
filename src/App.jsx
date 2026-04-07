@@ -7,22 +7,25 @@ import Rules from './pages/Rules'
 import Setup from './pages/Setup'
 import ClaimIdentity from './pages/ClaimIdentity'
 import { useCompetition } from './hooks/useCompetition'
+import { usePlayers } from './hooks/usePlayers'
 import { useIdentity } from './hooks/useIdentity'
+import { useRosterSeed } from './hooks/useRosterSeed'
 
 export default function App() {
   const { competition } = useCompetition()
+  usePlayers() // subscribe globally so store is populated everywhere
+  useRosterSeed() // seed player profiles on first-ever load
+
   const { claimedPlayerId } = useIdentity()
 
-  // Setup complete but player hasn't claimed a name yet
-  if (competition?.setupComplete && !claimedPlayerId) {
+  // First interaction: claim your profile before anything else
+  if (!claimedPlayerId) {
     return <ClaimIdentity />
   }
 
   return (
     <div className="min-h-dvh bg-background font-body text-on-surface">
       <StatusBar competition={competition} />
-
-      {/* TopAppBar */}
       <AppBar />
 
       <Routes>

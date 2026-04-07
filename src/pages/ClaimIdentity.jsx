@@ -1,10 +1,8 @@
-import { usePlayers } from '../hooks/usePlayers'
 import { useIdentity } from '../hooks/useIdentity'
 import useStore from '../store/useStore'
 
 export default function ClaimIdentity() {
   const { claimPlayer } = useIdentity()
-  usePlayers() // subscribe to players collection
   const players = useStore((s) => s.players)
 
   const available = players.filter((p) => !p.claimed)
@@ -21,7 +19,9 @@ export default function ClaimIdentity() {
         </div>
 
         {players.length === 0 && (
-          <p className="text-center text-on-surface-variant text-sm">Loading players…</p>
+          <p className="text-center text-on-surface-variant text-sm animate-pulse">
+            Loading roster…
+          </p>
         )}
 
         {players.length > 0 && available.length === 0 && (
