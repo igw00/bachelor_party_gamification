@@ -33,12 +33,6 @@ const useStore = create((set) => ({
   // ── UI state ──────────────────────────────────────────────────
   quickAddOpen: false,
   setQuickAddOpen: (open) => set({ quickAddOpen: open }),
-
-  quickAddAdvanced: false,
-  setQuickAddAdvanced: (adv) => set({ quickAddAdvanced: adv }),
-
-  selectedPlayerIds: [],
-  setSelectedPlayerIds: (ids) => set({ selectedPlayerIds: ids }),
 }))
 
 export default useStore

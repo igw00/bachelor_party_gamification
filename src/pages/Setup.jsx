@@ -9,17 +9,15 @@ import { DEFAULT_DECK } from '../lib/cards'
 const TEAM_IDS = ['teamA', 'teamB', 'teamC']
 const TEAM_DEFAULTS = ['Team Alpha', 'Team Beta', 'Team Gamma']
 
-const STEPS = ['Players', 'Teams', 'Cards']
+const STEPS = ['Players', 'Teams']
 
 export default function Setup() {
   const navigate = useNavigate()
   const [step, setStep] = useState(0)
   const [playerNames, setPlayerNames] = useState(Array(15).fill(''))
-  const [groomIdx, setGroomIdx] = useState(null)
   const [teamNames, setTeamNames] = useState([...TEAM_DEFAULTS])
   const [assignments, setAssignments] = useState({ teamA: [], teamB: [], teamC: [] })
   const [captains, setCaptains] = useState({ teamA: null, teamB: null, teamC: null })
-  const [deck, setDeck] = useState(DEFAULT_DECK)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
@@ -27,7 +25,9 @@ export default function Setup() {
   const { createTeam, setCaptain: setTeamCaptain } = useTeams()
   const { initCompetition, completeSetup } = useCompetition()
 
-  // ── Step 1: Players ──────────────────────────────────────────
+  const filledPlayers = playerNames.map((n, i) => ({ name: n.trim(), idx: i })).filter((p) => p.name)
+
+  // ── Step 0: Players ──────────────────────────────────────────
   function handlePlayerName(i, val) {
     setPlayerNames((prev) => prev.map((n, idx) => (idx === i ? val : n)))
   }
@@ -39,8 +39,7 @@ export default function Setup() {
     setStep(1)
   }
 
-  // ── Step 2: Teams ────────────────────────────────────────────
-  const filledPlayers = playerNames.map((n, i) => ({ name: n.trim(), idx: i })).filter((p) => p.name)
+  // ── Step 1: Teams ────────────────────────────────────────────
   const unassigned = filledPlayers.filter(
     (p) => !Object.values(assignments).flat().includes(p.idx)
   )
@@ -48,7 +47,6 @@ export default function Setup() {
   function assignPlayer(playerIdx, teamId) {
     setAssignments((prev) => {
       const next = { ...prev }
-      // Remove from any existing team
       for (const tid of TEAM_IDS) {
         next[tid] = next[tid].filter((i) => i !== playerIdx)
       }
@@ -64,7 +62,6 @@ export default function Setup() {
       newAssignments[TEAM_IDS[i % 3]].push(p.idx)
     })
     setAssignments(newAssignments)
-    // Auto-set first player of each team as captain
     const newCaptains = {}
     for (const tid of TEAM_IDS) {
       newCaptains[tid] = newAssignments[tid][0] ?? null
@@ -83,20 +80,7 @@ export default function Setup() {
       return
     }
     setError(null)
-    setStep(2)
-  }
-
-  // ── Step 3: Deck ─────────────────────────────────────────────
-  function updateCard(i, field, val) {
-    setDeck((prev) => prev.map((c, idx) => (idx === i ? { ...c, [field]: val } : c)))
-  }
-
-  function addCard() {
-    setDeck((prev) => [...prev, { name: '', type: 'PowerUp', effectText: '', isRare: false }])
-  }
-
-  function removeCard(i) {
-    setDeck((prev) => prev.filter((_, idx) => idx !== i))
+    await handleFinish()
   }
 
   // ── Final submit ──────────────────────────────────────────────
@@ -106,14 +90,12 @@ export default function Setup() {
     try {
       await initCompetition()
 
-      // Create players, get IDs
       const playerIdMap = {}
       for (const p of filledPlayers) {
-        const ref = await addPlayer(p.name, groomIdx === p.idx)
+        const ref = await addPlayer(p.name, false)
         playerIdMap[p.idx] = ref.id
       }
 
-      // Create teams and assign players
       for (const tid of TEAM_IDS) {
         const tIdx = TEAM_IDS.indexOf(tid)
         await createTeam(tid, teamNames[tIdx])
@@ -127,9 +109,9 @@ export default function Setup() {
         }
       }
 
-      // Seed deck
+      // Auto-seed the pre-made deck
       await Promise.all(
-        deck
+        DEFAULT_DECK
           .filter((c) => c.name.trim())
           .map((c) => addDocument('cards', { ...c, heldByTeamId: null, active: false, played: false }))
       )
@@ -181,14 +163,6 @@ export default function Setup() {
                 placeholder={`Player ${i + 1}`}
                 className="flex-1 bg-surface-container-high rounded-xl px-4 py-3 text-sm text-on-surface placeholder-on-surface-variant/50 outline-none focus:bg-surface-container-lowest transition-colors"
               />
-              <button
-                type="button"
-                onClick={() => setGroomIdx(groomIdx === i ? null : i)}
-                title="Mark as groom"
-                className={`text-xl transition-all active:scale-90 ${groomIdx === i ? 'opacity-100' : 'opacity-30'}`}
-              >
-                💍
-              </button>
             </div>
           ))}
           {error && <p className="text-sm font-semibold text-error">{error}</p>}
@@ -228,8 +202,7 @@ export default function Setup() {
                         onClick={() => assignPlayer(pidx, null)}
                         className={`px-3 py-1.5 rounded-full text-xs font-semibold ${isCap ? 'bg-secondary text-on-secondary' : 'bg-surface-container text-on-surface-variant'}`}
                       >
-                        {p.name}{groomIdx === pidx ? ' 💍' : ''}
-                        {isCap ? ' (C)' : ''}
+                        {p.name}{isCap ? ' (C)' : ''}
                       </button>
                       {!isCap && (
                         <button
@@ -266,56 +239,8 @@ export default function Setup() {
           {error && <p className="text-sm font-semibold text-error">{error}</p>}
           <div className="flex gap-3">
             <button onClick={() => { setStep(0); setError(null) }} className="flex-1 py-3.5 rounded-full text-sm font-bold text-primary">Back</button>
-            <button onClick={handleTeamsNext} className="flex-[2] py-3.5 rounded-full bg-primary-container text-on-primary font-bold shadow-[0_4px_12px_rgba(181,35,48,0.25)] active:scale-95 transition-transform">
-              Next: Build Deck →
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ── Step 2: Deck ── */}
-      {step === 2 && (
-        <div className="space-y-4">
-          {deck.map((card, i) => (
-            <div key={i} className="bg-surface-container-lowest rounded-xl p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] space-y-2">
-              <div className="flex gap-2">
-                <input
-                  value={card.name}
-                  onChange={(e) => updateCard(i, 'name', e.target.value)}
-                  placeholder="Card name"
-                  className="flex-1 bg-surface-container-high rounded-xl px-3 py-2 text-sm text-on-surface outline-none focus:bg-surface-container-lowest transition-colors"
-                />
-                <select
-                  value={card.type}
-                  onChange={(e) => updateCard(i, 'type', e.target.value)}
-                  className="bg-surface-container-high rounded-xl px-3 py-2 text-sm text-on-surface outline-none"
-                >
-                  {['PowerUp', 'WildCard', 'Chaos', 'Rare'].map((t) => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
-                <button onClick={() => removeCard(i)} className="text-on-surface-variant active:scale-90 transition-transform">
-                  <span className="material-symbols-outlined text-base">delete</span>
-                </button>
-              </div>
-              <input
-                value={card.effectText}
-                onChange={(e) => updateCard(i, 'effectText', e.target.value)}
-                placeholder="Effect description"
-                className="w-full bg-surface-container-high rounded-xl px-3 py-2 text-xs text-on-surface-variant outline-none focus:bg-surface-container-lowest transition-colors"
-              />
-            </div>
-          ))}
-
-          <button onClick={addCard} className="w-full py-3 rounded-xl border-2 border-dashed border-surface-container-high text-on-surface-variant text-sm font-semibold">
-            + Add Card
-          </button>
-
-          {error && <p className="text-sm font-semibold text-error">{error}</p>}
-          <div className="flex gap-3 pt-2">
-            <button onClick={() => { setStep(1); setError(null) }} className="flex-1 py-3.5 rounded-full text-sm font-bold text-primary">Back</button>
             <button
-              onClick={handleFinish}
+              onClick={handleTeamsNext}
               disabled={submitting}
               className="flex-[2] py-3.5 rounded-full bg-primary-container text-on-primary font-bold shadow-[0_4px_12px_rgba(181,35,48,0.25)] active:scale-95 transition-transform disabled:opacity-50"
             >

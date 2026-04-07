@@ -5,10 +5,18 @@ import QuickAddSheet from './components/points/QuickAddSheet'
 import Scoreboard from './pages/Scoreboard'
 import Rules from './pages/Rules'
 import Setup from './pages/Setup'
+import ClaimIdentity from './pages/ClaimIdentity'
 import { useCompetition } from './hooks/useCompetition'
+import { useIdentity } from './hooks/useIdentity'
 
 export default function App() {
   const { competition } = useCompetition()
+  const { claimedPlayerId } = useIdentity()
+
+  // Setup complete but player hasn't claimed a name yet
+  if (competition?.setupComplete && !claimedPlayerId) {
+    return <ClaimIdentity />
+  }
 
   return (
     <div className="min-h-dvh bg-background font-body text-on-surface">

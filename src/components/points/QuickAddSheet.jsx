@@ -1,47 +1,60 @@
 import { useState } from 'react'
 import BottomSheet from '../layout/BottomSheet'
-import PlayerChips from './PlayerChips'
-import AdvancedOptions from './AdvancedOptions'
 import useStore from '../../store/useStore'
 import { addDocument } from '../../hooks/useFirestore'
 import { useTeams } from '../../hooks/useTeams'
 import { usePlayers } from '../../hooks/usePlayers'
 import { useCompetition } from '../../hooks/useCompetition'
-import { calcActivityPoints, applyDay3Multiplier, DRINK_POINTS } from '../../lib/scoring'
+import { useIdentity } from '../../hooks/useIdentity'
+import { applyDay3Multiplier } from '../../lib/scoring'
 
-const DEFAULT_FORM = {
-  points: 0,
-  description: '',
-  activityType: '',
-  placement: null,
-  drinks: 0,
-  captainAward: 0,
-}
+const SHORTCUTS = [
+  { label: 'Drink', pts: 2, icon: '🍺' },
+  { label: 'Birdie', pts: 3, icon: '⛳' },
+  { label: 'Eagle', pts: 5, icon: '🦅' },
+  { label: 'Par', pts: 1, icon: '🏌️' },
+]
 
 export default function QuickAddSheet() {
-  const { quickAddOpen, setQuickAddOpen, quickAddAdvanced, setQuickAddAdvanced, selectedPlayerIds, setSelectedPlayerIds } = useStore()
-  const [form, setForm] = useState(DEFAULT_FORM)
+  const { quickAddOpen, setQuickAddOpen } = useStore()
+  const [points, setPoints] = useState('')
+  const [description, setDescription] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
   const { teams, addPoints: addTeamPoints } = useTeams()
   const { players, addIndividualPoints } = usePlayers()
   const { competition } = useCompetition()
+  const { claimedPlayerId } = useIdentity()
+
+  const claimedPlayer = players.find((p) => p.id === claimedPlayerId) ?? null
 
   function close() {
     setQuickAddOpen(false)
-    setSelectedPlayerIds([])
-    setForm(DEFAULT_FORM)
+    setPoints('')
+    setDescription('')
     setError(null)
-    setQuickAddAdvanced(false)
+  }
+
+  function addShortcut(pts) {
+    setPoints((prev) => {
+      const current = parseInt(prev, 10) || 0
+      return String(current + pts)
+    })
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (selectedPlayerIds.length === 0) {
-      setError('Select at least one player.')
+    const pts = parseInt(points, 10)
+    if (!pts || pts <= 0) {
+      setError('Enter a point total greater than 0.')
       return
     }
+    if (!claimedPlayer) {
+      setError('No player identity found. Please reload and claim your name.')
+      return
+    }
+
     setSubmitting(true)
     setError(null)
 
@@ -49,49 +62,24 @@ export default function QuickAddSheet() {
       const day = competition?.currentDay ?? 1
       const multiplierActive = competition?.day3MultiplierActive ?? false
 
-      for (const playerId of selectedPlayerIds) {
-        const player = players.find((p) => p.id === playerId)
-        if (!player) continue
+      const teamPts = applyDay3Multiplier(pts, day, multiplierActive)
+      const individualPts = applyDay3Multiplier(pts, day, multiplierActive)
 
-        let teamPoints = form.points
-        let individualPoints = form.points
+      await addDocument('events', {
+        type: 'manual',
+        loggedBy: claimedPlayer.id,
+        teamId: claimedPlayer.teamId,
+        playerId: claimedPlayer.id,
+        pointsTeam: teamPts,
+        pointsIndividual: individualPts,
+        description: description || null,
+        day,
+      })
 
-        // Activity scoring overrides manual points
-        if (quickAddAdvanced && form.activityType && form.placement) {
-          const calc = calcActivityPoints(form.activityType, form.placement)
-          teamPoints = calc.team
-          individualPoints = calc.individual
-        }
+      await addIndividualPoints(claimedPlayer.id, individualPts)
 
-        // Drink points
-        const drinkPts = (form.drinks || 0) * DRINK_POINTS
-        individualPoints += drinkPts
-
-        // Day 3 multiplier
-        teamPoints = applyDay3Multiplier(teamPoints, day, multiplierActive)
-        individualPoints = applyDay3Multiplier(individualPoints, day, multiplierActive)
-
-        // Write event
-        await addDocument('events', {
-          type: quickAddAdvanced && form.activityType ? 'activity' : 'manual',
-          loggedBy: playerId,
-          teamId: player.teamId,
-          playerId,
-          activityType: form.activityType || null,
-          placement: form.placement || null,
-          pointsTeam: teamPoints,
-          pointsIndividual: individualPoints,
-          description: form.description || null,
-          day,
-        })
-
-        // Update individual
-        await addIndividualPoints(playerId, individualPoints)
-
-        // Update team
-        if (player.teamId) {
-          await addTeamPoints(player.teamId, teamPoints, day)
-        }
+      if (claimedPlayer.teamId) {
+        await addTeamPoints(claimedPlayer.teamId, teamPts, day)
       }
 
       close()
@@ -102,82 +90,70 @@ export default function QuickAddSheet() {
     }
   }
 
-  const allPlayers = [...players].sort((a, b) => {
-    if (a.isGroom) return -1
-    if (b.isGroom) return 1
-    return a.name.localeCompare(b.name)
-  })
-
   return (
     <BottomSheet open={quickAddOpen} onClose={close} title="Add Points">
       <form onSubmit={handleSubmit} className="px-6 space-y-6">
-        {/* Player chips */}
-        <div>
-          <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">
-            Select Players
-          </label>
-          <PlayerChips players={allPlayers} />
-        </div>
 
-        {/* Basic: point stepper */}
-        {!quickAddAdvanced && (
-          <div>
-            <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">
-              Points
-            </label>
-            <div className="flex items-center gap-6">
-              <button
-                type="button"
-                onClick={() => setForm((f) => ({ ...f, points: Math.max(0, f.points - 1) }))}
-                className="w-14 h-14 rounded-full bg-surface-container text-on-surface font-bold text-2xl active:scale-90 transition-transform"
-              >
-                −
-              </button>
-              <span className="font-headline font-extrabold text-5xl text-on-surface w-16 text-center">
-                {form.points}
-              </span>
-              <button
-                type="button"
-                onClick={() => setForm((f) => ({ ...f, points: f.points + 1 }))}
-                className="w-14 h-14 rounded-full bg-surface-container text-on-surface font-bold text-2xl active:scale-90 transition-transform"
-              >
-                +
-              </button>
-            </div>
+        {/* Attributed player */}
+        {claimedPlayer && (
+          <div className="flex items-center gap-2 bg-secondary/10 rounded-xl px-4 py-2.5">
+            <span className="material-symbols-outlined text-base text-secondary">person</span>
+            <span className="text-sm font-semibold text-secondary">{claimedPlayer.name}</span>
           </div>
         )}
+
+        {/* Manual point input */}
+        <div>
+          <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">
+            Points
+          </label>
+          <input
+            type="number"
+            inputMode="numeric"
+            min="0"
+            value={points}
+            onChange={(e) => setPoints(e.target.value)}
+            placeholder="0"
+            className="w-full bg-surface-container-high rounded-2xl px-5 py-4 font-headline font-extrabold text-4xl text-on-surface text-center outline-none focus:bg-surface-container-lowest transition-colors"
+          />
+        </div>
+
+        {/* Quick shortcuts */}
+        <div>
+          <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">
+            Quick Add
+          </label>
+          <div className="grid grid-cols-4 gap-2">
+            {SHORTCUTS.map(({ label, pts, icon }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => addShortcut(pts)}
+                className="flex flex-col items-center gap-1 py-3 rounded-xl bg-surface-container active:bg-surface-container-high active:scale-95 transition-all"
+              >
+                <span className="text-lg">{icon}</span>
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wide">{label}</span>
+                <span className="text-xs font-bold text-secondary">+{pts}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* Description */}
         <div>
           <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">
-            Description
+            Note (optional)
           </label>
           <input
             type="text"
-            value={form.description}
-            onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-            placeholder="e.g. cornhole W"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="e.g. cornhole W, hole 7 birdie"
             className="w-full bg-surface-container-high rounded-xl px-4 py-3 text-sm text-on-surface placeholder-on-surface-variant/50 outline-none focus:bg-surface-container-lowest transition-colors"
           />
         </div>
 
-        {/* Advanced toggle */}
-        <button
-          type="button"
-          onClick={() => setQuickAddAdvanced(!quickAddAdvanced)}
-          className="flex items-center gap-2 text-sm font-bold text-secondary"
-        >
-          <span className="material-symbols-outlined text-base">
-            {quickAddAdvanced ? 'expand_less' : 'tune'}
-          </span>
-          {quickAddAdvanced ? 'Hide Advanced' : 'Advanced Options'}
-        </button>
-
-        {quickAddAdvanced && <AdvancedOptions form={form} setForm={setForm} />}
-
-        {error && (
-          <p className="text-sm font-semibold text-error">{error}</p>
-        )}
+        {error && <p className="text-sm font-semibold text-error">{error}</p>}
 
         {/* Actions */}
         <div className="flex gap-3 pt-2">

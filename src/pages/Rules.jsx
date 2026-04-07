@@ -17,10 +17,10 @@ export default function Rules() {
           color="primary"
           title="Prize Pool"
           lines={[
-            '1st place: 60% of pool',
-            '2nd place: 30% of pool',
-            '3rd place: Entry back',
-            'Day champs: side pots',
+            '1st place team: 50% of pot',
+            '2nd place team: 25% of pot',
+            '3rd place team: nothing',
+            'MVP (top scorer): 25% of pot',
           ]}
         />
         <QuickRefCard
@@ -70,11 +70,6 @@ export default function Rules() {
           <p>This creates a comeback mechanic for trailing teams.</p>
         </CollapsibleSection>
 
-        <CollapsibleSection title="Groom Bonus">
-          <p>Any activity the groom participates in grants his team a 1.25× multiplier on team points for that event.</p>
-          <p>The groom is not on a team — he participates as a wildcard alongside any team.</p>
-        </CollapsibleSection>
-
         <CollapsibleSection title="Captain Bank">
           <p>Each captain has a 150-point bank to award to <em>other</em> teams' players throughout the event.</p>
           <p>Awards must be 1–50 pts per transaction. Captains cannot award their own team.</p>
@@ -94,13 +89,13 @@ export default function Rules() {
         </CollapsibleSection>
 
         <CollapsibleSection title="Prize Pool">
-          <p>Entry fee per player contributes to the prize pool. Final standings at end of Day 3 determine payouts:</p>
+          <p>Team standings at end of Day 3 determine payouts:</p>
           <ul className="list-disc list-inside space-y-1 mt-2">
-            <li>1st place team: 60% of total pool</li>
-            <li>2nd place team: 30% of total pool</li>
-            <li>3rd place team: entry fee returned</li>
+            <li><strong>1st place team:</strong> 50% of the pot</li>
+            <li><strong>2nd place team:</strong> 25% of the pot</li>
+            <li><strong>3rd place team:</strong> nothing</li>
           </ul>
-          <p className="mt-2">Day champions may also earn side pots (set during setup).</p>
+          <p className="mt-3"><strong>MVP Individual:</strong> The single player with the most individual points wins 25% of the pot — regardless of which team they're on.</p>
         </CollapsibleSection>
 
         <CollapsibleSection title="Tiebreakers">
