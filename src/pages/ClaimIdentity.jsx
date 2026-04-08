@@ -10,10 +10,9 @@ export default function ClaimIdentity() {
 
   const available = players.filter((p) => !p.claimed)
 
-  async function handleConfirm() {
-    setConfirming(true)
-    await claimPlayer(selected.id)
-    // App.jsx will now see claimedPlayerId and unmount this — no need to reset state
+  function handleConfirm() {
+    claimPlayer(selected.id)
+    // App.jsx sees claimedPlayerId immediately and transitions
   }
 
   // Step 2: confirmation screen

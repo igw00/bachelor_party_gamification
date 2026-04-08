@@ -6,10 +6,10 @@ const STORAGE_KEY = 'spi_player_id'
 export function useIdentity() {
   const { claimedPlayerId, setClaimedPlayerId } = useStore()
 
-  async function claimPlayer(playerId) {
-    await updateDocument('players', playerId, { claimed: true })
+  function claimPlayer(playerId) {
     localStorage.setItem(STORAGE_KEY, playerId)
     setClaimedPlayerId(playerId)
+    updateDocument('players', playerId, { claimed: true }) // background sync
   }
 
   function unclaim() {
