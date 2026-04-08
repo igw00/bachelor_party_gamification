@@ -30,6 +30,10 @@ const useStore = create((set) => ({
   events: [],  // append-only
   setEvents: (events) => set({ events }),
 
+  // ── Identity ──────────────────────────────────────────────────
+  claimedPlayerId: localStorage.getItem('spi_player_id') ?? null,
+  setClaimedPlayerId: (id) => set({ claimedPlayerId: id }),
+
   // ── UI state ──────────────────────────────────────────────────
   quickAddOpen: false,
   setQuickAddOpen: (open) => set({ quickAddOpen: open }),
