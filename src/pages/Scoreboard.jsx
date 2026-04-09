@@ -58,13 +58,7 @@ export default function Scoreboard() {
           <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">
             sports
           </span>
-          {competition?.setupComplete === false && competition?.currentDay ? (
-            <>
-              <p className="font-headline font-bold text-lg text-on-surface mb-2 animate-pulse">Setting up teams…</p>
-              <p className="text-sm text-on-surface-variant mb-4">Hold tight, this only takes a moment.</p>
-              {IS_DEV && isCommissioner && <ScoreboardDevReset navigate={navigate} />}
-            </>
-          ) : isCommissioner ? (
+          {isCommissioner ? (
             <>
               <p className="font-headline font-bold text-lg text-on-surface mb-1">No teams yet</p>
               <p className="text-sm text-on-surface-variant mb-4">Complete setup to get started.</p>
@@ -74,7 +68,10 @@ export default function Scoreboard() {
               >
                 Go to Setup
               </button>
+              {IS_DEV && <ScoreboardDevReset navigate={navigate} />}
             </>
+          ) : competition?.setupComplete === false && competition?.currentDay ? (
+            <p className="font-headline font-bold text-lg text-on-surface mb-2 animate-pulse">Setting up teams…</p>
           ) : (
             <>
               <p className="font-headline font-bold text-lg text-on-surface mb-2">Draft not started yet</p>
