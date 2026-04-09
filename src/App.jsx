@@ -47,10 +47,13 @@ export default function App() {
 
 function AppBar({ player, isCommissioner }) {
   const navigate = useNavigate()
+  const teams = useStore((s) => s.teams)
 
   const initials = player?.name
     ? player.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
     : '?'
+
+  const myTeam = player?.teamId ? teams.find((t) => t.id === player.teamId) : null
 
   return (
     <header className="fixed top-8 w-full z-50 bg-background/80 backdrop-blur-xl flex items-center justify-between px-6 py-4">
@@ -78,7 +81,9 @@ function AppBar({ player, isCommissioner }) {
             </div>
             <div className="flex flex-col items-start">
               <span className="font-headline font-bold text-xs text-on-surface leading-tight">{player.name.split(' ')[0]}</span>
-              <span className="text-[10px] text-on-surface-variant leading-tight">{player.individualPoints ?? 0} pts</span>
+              <span className="text-[10px] text-on-surface-variant leading-tight">
+                {myTeam ? `${myTeam.name} — ${player.individualPoints ?? 0} pts` : `${player.individualPoints ?? 0} pts`}
+              </span>
             </div>
           </div>
         )}
