@@ -7,7 +7,10 @@ import { useCollection } from '../hooks/useFirestore'
 import { useIdentity } from '../hooks/useIdentity'
 import useStore from '../store/useStore'
 import TeamCard from '../components/scoreboard/TeamCard'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { devReset } from '../lib/devReset'
+
+const IS_DEV = import.meta.env.VITE_APP_ENV === 'dev'
 
 const COMMISSIONER_NAME = 'Ian Waltz'
 
@@ -56,10 +59,10 @@ export default function Scoreboard() {
             sports
           </span>
           {competition?.setupComplete === false && competition?.currentDay ? (
-            // Competition doc exists but setup is still in progress
             <>
               <p className="font-headline font-bold text-lg text-on-surface mb-2 animate-pulse">Setting up teams…</p>
-              <p className="text-sm text-on-surface-variant">Hold tight, this only takes a moment.</p>
+              <p className="text-sm text-on-surface-variant mb-4">Hold tight, this only takes a moment.</p>
+              {IS_DEV && isCommissioner && <ScoreboardDevReset navigate={navigate} />}
             </>
           ) : isCommissioner ? (
             <>
@@ -117,5 +120,49 @@ export default function Scoreboard() {
         </div>
       )}
     </main>
+  )
+}
+
+function ScoreboardDevReset({ navigate }) {
+  const [confirm, setConfirm] = useState(false)
+  const [resetting, setResetting] = useState(false)
+
+  async function handleReset() {
+    setResetting(true)
+    await devReset()
+    navigate('/')
+    window.location.reload()
+  }
+
+  if (!confirm) {
+    return (
+      <button
+        onClick={() => setConfirm(true)}
+        className="mt-2 w-full py-2.5 rounded-full border border-dashed border-error/40 text-error text-sm font-bold active:scale-95 transition-transform"
+      >
+        DEV: Reset All Data
+      </button>
+    )
+  }
+
+  return (
+    <div className="mt-2 rounded-xl border border-error/30 bg-error/5 p-4 space-y-3">
+      <p className="text-sm font-bold text-error">Wipes all teams, events, cards, and resets players.</p>
+      <div className="flex gap-3">
+        <button
+          onClick={() => setConfirm(false)}
+          className="flex-1 py-2.5 rounded-full text-sm font-bold text-on-surface-variant"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleReset}
+          disabled={resetting}
+          className="flex-[2] py-2.5 rounded-full bg-error text-white text-sm font-bold active:scale-95 transition-transform disabled:opacity-50"
+        >
+          {resetting ? 'Resetting…' : 'Yes, reset everything'}
+        </button>
+      </div>
+    </div>
   )
 }
