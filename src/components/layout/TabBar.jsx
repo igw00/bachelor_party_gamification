@@ -3,10 +3,8 @@ import useStore from '../../store/useStore'
 
 export default function TabBar() {
   const setQuickAddOpen = useStore((s) => s.setQuickAddOpen)
-  const setQuickAddAdvanced = useStore((s) => s.setQuickAddAdvanced)
 
   function openQuickAdd() {
-    setQuickAddAdvanced(false)
     setQuickAddOpen(true)
   }
 
