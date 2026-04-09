@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { devReset } from '../lib/devReset'
 import { usePlayers } from '../hooks/usePlayers'
 import { useTeams } from '../hooks/useTeams'
 import { useCompetition } from '../hooks/useCompetition'
 import { updateDocument, addDocument } from '../hooks/useFirestore'
 import { DEFAULT_DECK } from '../lib/cards'
+
+const IS_DEV = import.meta.env.VITE_APP_ENV === 'dev'
 
 const TEAM_IDS = ['teamA', 'teamB', 'teamC']
 const TEAM_DEFAULTS = ['Team Alpha', 'Team Beta', 'Team Gamma']
@@ -217,7 +220,56 @@ export default function Setup() {
             {submitting ? 'Setting up…' : '🚀 Start Competition'}
           </button>
         )}
+
+        {IS_DEV && <DevResetButton />}
       </div>
     </main>
+  )
+}
+
+function DevResetButton() {
+  const navigate = useNavigate()
+  const [resetting, setResetting] = useState(false)
+  const [confirm, setConfirm] = useState(false)
+
+  async function handleReset() {
+    setResetting(true)
+    await devReset()
+    setResetting(false)
+    setConfirm(false)
+    navigate('/')
+    window.location.reload()
+  }
+
+  if (!confirm) {
+    return (
+      <button
+        onClick={() => setConfirm(true)}
+        className="w-full py-3 rounded-full border border-dashed border-error/40 text-error text-sm font-bold active:scale-95 transition-transform"
+      >
+        DEV: Reset All Data
+      </button>
+    )
+  }
+
+  return (
+    <div className="rounded-xl border border-error/30 bg-error/5 p-4 space-y-3 text-center">
+      <p className="text-sm font-bold text-error">This wipes all teams, events, cards, and unclaims all players.</p>
+      <div className="flex gap-3">
+        <button
+          onClick={() => setConfirm(false)}
+          className="flex-1 py-2.5 rounded-full text-sm font-bold text-on-surface-variant"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleReset}
+          disabled={resetting}
+          className="flex-[2] py-2.5 rounded-full bg-error text-white text-sm font-bold active:scale-95 transition-transform disabled:opacity-50"
+        >
+          {resetting ? 'Resetting…' : 'Yes, reset everything'}
+        </button>
+      </div>
+    </div>
   )
 }
