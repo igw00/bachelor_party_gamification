@@ -10,15 +10,20 @@ import { useCompetition } from './hooks/useCompetition'
 import { usePlayers } from './hooks/usePlayers'
 import { useIdentity } from './hooks/useIdentity'
 import { useRosterSeed } from './hooks/useRosterSeed'
+import useStore from './store/useStore'
+
+const COMMISSIONER_NAME = 'Ian Waltz'
 
 export default function App() {
   const { competition } = useCompetition()
-  usePlayers() // subscribe globally so store is populated everywhere
-  useRosterSeed() // seed player profiles on first-ever load
+  usePlayers()
+  useRosterSeed()
 
   const { claimedPlayerId } = useIdentity()
+  const players = useStore((s) => s.players)
+  const claimedPlayer = players.find((p) => p.id === claimedPlayerId) ?? null
+  const isCommissioner = claimedPlayer?.name === COMMISSIONER_NAME
 
-  // First interaction: claim your profile before anything else
   if (!claimedPlayerId) {
     return <ClaimIdentity />
   }
@@ -26,12 +31,12 @@ export default function App() {
   return (
     <div className="min-h-dvh bg-background font-body text-on-surface">
       <StatusBar competition={competition} />
-      <AppBar />
+      <AppBar player={claimedPlayer} isCommissioner={isCommissioner} />
 
       <Routes>
         <Route path="/" element={<Scoreboard />} />
         <Route path="/rules" element={<Rules />} />
-        <Route path="/setup" element={<Setup />} />
+        {isCommissioner && <Route path="/setup" element={<Setup />} />}
       </Routes>
 
       <TabBar />
@@ -40,8 +45,13 @@ export default function App() {
   )
 }
 
-function AppBar() {
+function AppBar({ player, isCommissioner }) {
   const navigate = useNavigate()
+
+  const initials = player?.name
+    ? player.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
+    : '?'
+
   return (
     <header className="fixed top-8 w-full z-50 bg-background/80 backdrop-blur-xl flex items-center justify-between px-6 py-4">
       <div className="flex items-center gap-3">
@@ -50,13 +60,28 @@ function AppBar() {
           The St. Pete Invitational
         </h1>
       </div>
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => navigate('/setup')}
-          className="text-on-surface-variant active:scale-90 transition-transform"
-        >
-          <span className="material-symbols-outlined">settings</span>
-        </button>
+
+      <div className="flex items-center gap-3">
+        {isCommissioner && (
+          <button
+            onClick={() => navigate('/setup')}
+            className="text-on-surface-variant active:scale-90 transition-transform"
+          >
+            <span className="material-symbols-outlined">settings</span>
+          </button>
+        )}
+
+        {player && (
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+              <span className="text-on-secondary font-bold text-[11px] leading-none">{initials}</span>
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="font-headline font-bold text-xs text-on-surface leading-tight">{player.name.split(' ')[0]}</span>
+              <span className="text-[10px] text-on-surface-variant leading-tight">{player.individualPoints ?? 0} pts</span>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   )

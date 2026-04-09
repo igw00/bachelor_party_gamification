@@ -134,7 +134,7 @@ export default function Setup() {
                 return (
                   <span
                     key={pid}
-                    className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${isCap ? TEAM_COLORS[ti] : 'bg-surface-container text-on-surface-variant'}`}
+                    className={`inline-flex items-center justify-center px-2.5 py-1 rounded-full text-xs font-semibold leading-none ${isCap ? TEAM_COLORS[ti] : 'bg-surface-container text-on-surface-variant'}`}
                   >
                     {p.name}{isCap ? ' (C)' : ''}
                   </span>
