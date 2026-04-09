@@ -64,7 +64,7 @@ export default function Setup() {
     setPickIndex((i) => i + 1)
   }
 
-  function handleFinish() {
+  async function handleFinish() {
     if (!allAssigned) {
       setError('Complete the draft first.')
       return
@@ -74,10 +74,12 @@ export default function Setup() {
       return
     }
 
-    // Navigate immediately — writes happen in the background
-    navigate('/')
+    setSubmitting(true)
+    setError(null)
 
-    initCompetition().then(() => {
+    try {
+      await initCompetition()
+
       const teamWrites = TEAM_IDS.map(async (tid) => {
         const tIdx = TEAM_IDS.indexOf(tid)
         await createTeam(tid, teamNames[tIdx])
@@ -97,14 +99,22 @@ export default function Setup() {
         .filter((c) => c.name.trim())
         .map((c) => addDocument('cards', { ...c, heldByTeamId: null, active: false, played: false }))
 
-      Promise.all([...teamWrites, ...cardWrites]).then(() => completeSetup())
-    })
+      await Promise.all([...teamWrites, ...cardWrites])
+      await completeSetup()
+
+      navigate('/')
+    } catch (err) {
+      console.error('Setup failed:', err)
+      setError(`Setup failed: ${err.message ?? 'Unknown error'}`)
+      setSubmitting(false)
+    }
   }
 
   if (players.length === 0) {
     return (
-      <main className="pt-28 pb-32 px-5 max-w-2xl mx-auto">
+      <main className="pt-28 pb-32 px-5 max-w-2xl mx-auto space-y-4">
         <p className="text-on-surface-variant animate-pulse">Loading roster…</p>
+        {IS_DEV && <DevResetButton />}
       </main>
     )
   }

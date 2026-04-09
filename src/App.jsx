@@ -8,6 +8,7 @@ import Setup from './pages/Setup'
 import ClaimIdentity from './pages/ClaimIdentity'
 import { useCompetition } from './hooks/useCompetition'
 import { usePlayers } from './hooks/usePlayers'
+import { useTeams } from './hooks/useTeams'
 import { useIdentity } from './hooks/useIdentity'
 import { useRosterSeed } from './hooks/useRosterSeed'
 import useStore from './store/useStore'
@@ -17,6 +18,7 @@ const COMMISSIONER_NAME = 'Ian Waltz'
 export default function App() {
   const { competition } = useCompetition()
   usePlayers()
+  useTeams()
   useRosterSeed()
 
   const { claimedPlayerId } = useIdentity()

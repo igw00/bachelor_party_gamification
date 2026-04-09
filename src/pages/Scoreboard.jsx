@@ -55,7 +55,13 @@ export default function Scoreboard() {
           <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">
             sports
           </span>
-          {isCommissioner ? (
+          {competition?.setupComplete === false && competition?.currentDay ? (
+            // Competition doc exists but setup is still in progress
+            <>
+              <p className="font-headline font-bold text-lg text-on-surface mb-2 animate-pulse">Setting up teams…</p>
+              <p className="text-sm text-on-surface-variant">Hold tight, this only takes a moment.</p>
+            </>
+          ) : isCommissioner ? (
             <>
               <p className="font-headline font-bold text-lg text-on-surface mb-1">No teams yet</p>
               <p className="text-sm text-on-surface-variant mb-4">Complete setup to get started.</p>
