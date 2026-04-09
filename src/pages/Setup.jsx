@@ -61,7 +61,7 @@ export default function Setup() {
     setPickIndex((i) => i + 1)
   }
 
-  async function handleFinish() {
+  function handleFinish() {
     if (!allAssigned) {
       setError('Complete the draft first.')
       return
@@ -70,36 +70,32 @@ export default function Setup() {
       setError('Each team needs a captain.')
       return
     }
-    setSubmitting(true)
-    setError(null)
-    try {
-      await initCompetition()
 
-      for (const tid of TEAM_IDS) {
+    // Navigate immediately — writes happen in the background
+    navigate('/')
+
+    initCompetition().then(() => {
+      const teamWrites = TEAM_IDS.map(async (tid) => {
         const tIdx = TEAM_IDS.indexOf(tid)
         await createTeam(tid, teamNames[tIdx])
-        for (const pid of assignments[tid]) {
-          await updateDocument('players', pid, { teamId: tid })
-          if (captains[tid] === pid) {
-            await updateDocument('players', pid, { isCaptain: true })
-            await setTeamCaptain(tid, pid)
-          }
-        }
-      }
+        await Promise.all(
+          assignments[tid].map((pid) => {
+            const ops = [updateDocument('players', pid, { teamId: tid })]
+            if (captains[tid] === pid) {
+              ops.push(updateDocument('players', pid, { isCaptain: true }))
+              ops.push(setTeamCaptain(tid, pid))
+            }
+            return Promise.all(ops)
+          })
+        )
+      })
 
-      await Promise.all(
-        DEFAULT_DECK
-          .filter((c) => c.name.trim())
-          .map((c) => addDocument('cards', { ...c, heldByTeamId: null, active: false, played: false }))
-      )
+      const cardWrites = DEFAULT_DECK
+        .filter((c) => c.name.trim())
+        .map((c) => addDocument('cards', { ...c, heldByTeamId: null, active: false, played: false }))
 
-      await completeSetup()
-      navigate('/')
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setSubmitting(false)
-    }
+      Promise.all([...teamWrites, ...cardWrites]).then(() => completeSetup())
+    })
   }
 
   if (players.length === 0) {
