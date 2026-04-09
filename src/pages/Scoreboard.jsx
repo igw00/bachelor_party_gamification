@@ -4,9 +4,12 @@ import { usePlayers } from '../hooks/usePlayers'
 import { useCards } from '../hooks/useCards'
 import { useCompetition } from '../hooks/useCompetition'
 import { useCollection } from '../hooks/useFirestore'
+import { useIdentity } from '../hooks/useIdentity'
 import useStore from '../store/useStore'
 import TeamCard from '../components/scoreboard/TeamCard'
 import { useCallback } from 'react'
+
+const COMMISSIONER_NAME = 'Ian Waltz'
 
 export default function Scoreboard() {
   const navigate = useNavigate()
@@ -15,6 +18,9 @@ export default function Scoreboard() {
   const { cards } = useCards()
   const { competition } = useCompetition()
   const { events, setEvents } = useStore()
+  const { claimedPlayerId } = useIdentity()
+  const claimedPlayer = players.find((p) => p.id === claimedPlayerId) ?? null
+  const isCommissioner = claimedPlayer?.name === COMMISSIONER_NAME
 
   useCollection('events', useCallback(setEvents, [setEvents]))
 
@@ -49,14 +55,23 @@ export default function Scoreboard() {
           <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">
             sports
           </span>
-          <p className="font-headline font-bold text-lg text-on-surface mb-1">No teams yet</p>
-          <p className="text-sm text-on-surface-variant mb-4">Complete setup to get started.</p>
-          <button
-            onClick={() => navigate('/setup')}
-            className="bg-primary-container text-on-primary font-bold px-6 py-3 rounded-full text-sm active:scale-95 transition-transform"
-          >
-            Go to Setup
-          </button>
+          {isCommissioner ? (
+            <>
+              <p className="font-headline font-bold text-lg text-on-surface mb-1">No teams yet</p>
+              <p className="text-sm text-on-surface-variant mb-4">Complete setup to get started.</p>
+              <button
+                onClick={() => navigate('/setup')}
+                className="bg-primary-container text-on-primary font-bold px-6 py-3 rounded-full text-sm active:scale-95 transition-transform"
+              >
+                Go to Setup
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="font-headline font-bold text-lg text-on-surface mb-2">Draft not started yet</p>
+              <p className="text-sm text-on-surface-variant">Please wait for Ian Waltz to complete the draft.</p>
+            </>
+          )}
         </div>
       )}
 
