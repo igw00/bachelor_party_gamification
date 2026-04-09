@@ -1,12 +1,13 @@
-import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore'
+import { collection, getDocs, deleteDoc, doc, updateDoc, terminate } from 'firebase/firestore'
+import { clearIndexedDbPersistence } from 'firebase/firestore'
 import { db } from './firebase'
 
 /**
- * Full dev reset — wipes all game state so you can re-run any flow from scratch.
- * Parallelises all Firestore reads and writes to minimise round-trips.
+ * Full dev reset — wipes all Firestore data, clears the IndexedDB cache,
+ * and removes local identity so the full flow can be re-run from scratch.
  */
 export async function devReset() {
-  // Clear local identity immediately so the claim screen shows on reload
+  // Clear local identity immediately
   localStorage.removeItem('spi_player_id')
 
   // Fetch all collections in parallel
@@ -33,4 +34,9 @@ export async function devReset() {
       })
     ),
   ])
+
+  // Terminate the Firestore instance then wipe the local IndexedDB cache
+  // so stale cached docs don't bleed into the next session
+  await terminate(db)
+  await clearIndexedDbPersistence(db)
 }

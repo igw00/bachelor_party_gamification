@@ -4,7 +4,7 @@ import { devReset } from '../lib/devReset'
 import { usePlayers } from '../hooks/usePlayers'
 import { useTeams } from '../hooks/useTeams'
 import { useCompetition } from '../hooks/useCompetition'
-import { updateDocument, addDocument } from '../hooks/useFirestore'
+import { updateDocument, mergeDocument, addDocument } from '../hooks/useFirestore'
 import { DEFAULT_DECK } from '../lib/cards'
 
 const IS_DEV = import.meta.env.VITE_APP_ENV === 'dev'
@@ -85,11 +85,9 @@ export default function Setup() {
         await createTeam(tid, teamNames[tIdx])
         await Promise.all(
           assignments[tid].map((pid) => {
-            const ops = [updateDocument('players', pid, { teamId: tid })]
-            if (captains[tid] === pid) {
-              ops.push(updateDocument('players', pid, { isCaptain: true }))
-              ops.push(setTeamCaptain(tid, pid))
-            }
+            const playerData = { teamId: tid, isCaptain: captains[tid] === pid }
+            const ops = [mergeDocument('players', pid, playerData)]
+            if (captains[tid] === pid) ops.push(setTeamCaptain(tid, pid))
             return Promise.all(ops)
           })
         )
