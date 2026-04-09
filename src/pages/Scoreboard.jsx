@@ -129,9 +129,11 @@ function ScoreboardDevReset({ navigate }) {
 
   async function handleReset() {
     setResetting(true)
-    await devReset()
-    navigate('/')
-    window.location.reload()
+    try {
+      await devReset()
+    } finally {
+      window.location.reload()
+    }
   }
 
   if (!confirm) {

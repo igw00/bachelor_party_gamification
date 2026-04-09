@@ -3,32 +3,34 @@ import { db } from './firebase'
 
 /**
  * Full dev reset — wipes all game state so you can re-run any flow from scratch.
- * Only callable in dev environment. Never imported in production.
+ * Parallelises all Firestore reads and writes to minimise round-trips.
  */
 export async function devReset() {
-  // Delete teams, cards, events entirely
-  for (const col of ['teams', 'cards', 'events']) {
-    const snap = await getDocs(collection(db, col))
-    await Promise.all(snap.docs.map((d) => deleteDoc(doc(db, col, d.id))))
-  }
+  // Clear local identity immediately so the claim screen shows on reload
+  localStorage.removeItem('spi_player_id')
 
-  // Reset competition doc if it exists
-  const compSnap = await getDocs(collection(db, 'competition'))
-  await Promise.all(compSnap.docs.map((d) => deleteDoc(doc(db, 'competition', d.id))))
+  // Fetch all collections in parallel
+  const [teamsSnap, cardsSnap, eventsSnap, compSnap, playerSnap] = await Promise.all([
+    getDocs(collection(db, 'teams')),
+    getDocs(collection(db, 'cards')),
+    getDocs(collection(db, 'events')),
+    getDocs(collection(db, 'competition')),
+    getDocs(collection(db, 'players')),
+  ])
 
-  // Reset players: unclaim, remove team assignment, zero points
-  const playerSnap = await getDocs(collection(db, 'players'))
-  await Promise.all(
-    playerSnap.docs.map((d) =>
+  // Delete / reset everything in one parallel batch
+  await Promise.all([
+    ...teamsSnap.docs.map((d) => deleteDoc(doc(db, 'teams', d.id))),
+    ...cardsSnap.docs.map((d) => deleteDoc(doc(db, 'cards', d.id))),
+    ...eventsSnap.docs.map((d) => deleteDoc(doc(db, 'events', d.id))),
+    ...compSnap.docs.map((d) => deleteDoc(doc(db, 'competition', d.id))),
+    ...playerSnap.docs.map((d) =>
       updateDoc(doc(db, 'players', d.id), {
         claimed: false,
         teamId: null,
         isCaptain: false,
         individualPoints: 0,
       })
-    )
-  )
-
-  // Clear local identity so the claim screen shows again
-  localStorage.removeItem('spi_player_id')
+    ),
+  ])
 }

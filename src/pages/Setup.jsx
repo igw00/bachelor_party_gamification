@@ -244,11 +244,11 @@ function DevResetButton() {
 
   async function handleReset() {
     setResetting(true)
-    await devReset()
-    setResetting(false)
-    setConfirm(false)
-    navigate('/')
-    window.location.reload()
+    try {
+      await devReset()
+    } finally {
+      window.location.reload()
+    }
   }
 
   if (!confirm) {
