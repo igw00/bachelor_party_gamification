@@ -37,6 +37,10 @@ const useStore = create((set) => ({
   // ── UI state ──────────────────────────────────────────────────
   quickAddOpen: false,
   setQuickAddOpen: (open) => set({ quickAddOpen: open }),
+
+  // ── Card tab badge ─────────────────────────────────────────────
+  cardBadge: false,
+  setCardBadge: (val) => set({ cardBadge: val }),
 }))
 
 export default useStore

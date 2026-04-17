@@ -1,6 +1,63 @@
+import { useState } from 'react'
 import useStore from '../../store/useStore'
 import { useIdentity } from '../../hooks/useIdentity'
+import { useCards } from '../../hooks/useCards'
 import GameCard from './GameCard'
+
+function ActivateButton({ card, playerId }) {
+  const { activateCard } = useCards()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const isActive = card.active
+  const isPlayed = card.played
+
+  async function handleActivate() {
+    if (loading || isActive || isPlayed) return
+    setLoading(true)
+    setError(null)
+    try {
+      await activateCard(card.id, playerId)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (isPlayed) {
+    return (
+      <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-on-surface-variant">
+        <span className="material-symbols-outlined text-base">check_circle</span>
+        Played
+      </div>
+    )
+  }
+
+  if (isActive) {
+    return (
+      <div className="mt-3 flex items-center justify-center gap-1.5 text-xs font-bold text-tertiary bg-tertiary/10 rounded-full py-2">
+        <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>
+          bolt
+        </span>
+        Active
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={handleActivate}
+        disabled={loading}
+        className="w-full py-2.5 rounded-full bg-secondary text-on-secondary font-bold text-sm active:scale-95 transition-transform disabled:opacity-60"
+      >
+        {loading ? 'Activating…' : 'Activate Card'}
+      </button>
+      {error && <p className="text-[11px] text-error text-center mt-1">{error}</p>}
+    </div>
+  )
+}
 
 export default function TeamActiveCards() {
   const { claimedPlayerId } = useIdentity()
@@ -13,6 +70,7 @@ export default function TeamActiveCards() {
 
   // All cards currently held by my team (not yet played)
   const heldCards = cards.filter((c) => c.heldByTeamId === myTeam?.id)
+  const activeCount = heldCards.filter((c) => c.active).length
 
   if (!myTeam) {
     return (
@@ -48,7 +106,10 @@ export default function TeamActiveCards() {
       <div className="flex items-center justify-between mb-5 bg-surface-container-lowest rounded-xl px-4 py-3 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
         <div>
           <p className="font-headline font-bold text-base text-on-surface">{myTeam.name}</p>
-          <p className="text-xs text-on-surface-variant mt-0.5">{heldCards.length} card{heldCards.length !== 1 ? 's' : ''} in hand</p>
+          <p className="text-xs text-on-surface-variant mt-0.5">
+            {heldCards.length} card{heldCards.length !== 1 ? 's' : ''} in hand
+            {activeCount > 0 && ` · ${activeCount} active`}
+          </p>
         </div>
         <div className="text-right">
           <p className="font-headline font-black text-3xl text-on-surface">{myTeam.totalPoints ?? 0}</p>
@@ -56,10 +117,13 @@ export default function TeamActiveCards() {
         </div>
       </div>
 
-      {/* Cards grid */}
-      <div className="flex flex-wrap gap-5 justify-center">
+      {/* Cards — one per row for readability, with activate button below each */}
+      <div className="flex flex-col items-center gap-6">
         {heldCards.map((card, i) => (
-          <GameCard key={card.id} card={card} seed={i} />
+          <div key={card.id} className="w-64">
+            <GameCard card={card} seed={i} />
+            <ActivateButton card={card} playerId={claimedPlayerId} />
+          </div>
         ))}
       </div>
     </div>

@@ -34,10 +34,14 @@ export function useCards() {
 
   async function activateCard(cardId, playerId) {
     const player = players.find((p) => p.id === playerId)
-    assertIsCaptain(player)
+    if (!player) throw new Error('Player not found')
     const teamCards = cards.filter((c) => c.heldByTeamId === player.teamId && c.active)
     if (!canActivateCard(teamCards)) throw new Error('Max 2 cards can be active at once')
-    await updateDocument('cards', cardId, { active: true })
+    await updateDocument('cards', cardId, {
+      active: true,
+      activatedAt: serverTimestamp(),
+      activatedByPlayerId: playerId,
+    })
   }
 
   async function playCard(cardId) {

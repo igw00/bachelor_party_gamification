@@ -1,8 +1,9 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import useStore from '../../store/useStore'
 
 export default function TabBar() {
   const setQuickAddOpen = useStore((s) => s.setQuickAddOpen)
+  const cardBadge = useStore((s) => s.cardBadge)
 
   function openQuickAdd() {
     setQuickAddOpen(true)
@@ -49,19 +50,24 @@ export default function TabBar() {
       <NavLink
         to="/cards"
         className={({ isActive }) =>
-          `flex flex-col items-center justify-center gap-0.5 px-3 rounded-full transition-all active:scale-90 ${
+          `relative flex flex-col items-center justify-center gap-0.5 px-3 rounded-full transition-all active:scale-90 ${
             isActive ? 'text-primary' : 'text-on-surface-variant'
           }`
         }
       >
         {({ isActive }) => (
           <>
-            <span
-              className="material-symbols-outlined"
-              style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
-            >
-              playing_cards
-            </span>
+            <div className="relative">
+              <span
+                className="material-symbols-outlined"
+                style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+              >
+                playing_cards
+              </span>
+              {cardBadge && !isActive && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-primary-container border border-background" />
+              )}
+            </div>
             <span className="font-label font-semibold text-[10px] uppercase tracking-wider">Cards</span>
           </>
         )}

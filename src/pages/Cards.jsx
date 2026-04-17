@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useCollection } from '../hooks/useFirestore'
 import useStore from '../store/useStore'
 import DeckView from '../components/cards/DeckView'
@@ -11,12 +11,51 @@ const TABS = [
   { id: 'team', label: 'Team Cards', icon: 'shield' },
 ]
 
+const LAST_SEEN_KEY = 'spi_last_seen_activation'
+
 export default function Cards() {
   const [activeTab, setActiveTab] = useState('deck')
 
+  const setCards = useStore((s) => s.setCardBadge)
+  const setCardBadge = useStore((s) => s.setCardBadge)
+  const cards = useStore((s) => s.cards)
+  const teams = useStore((s) => s.teams)
+  const players = useStore((s) => s.players)
+  const claimedPlayerId = useStore((s) => s.claimedPlayerId)
+
   // Ensure cards subscription is active on this page
-  const setCards = useStore((s) => s.setCards)
-  useCollection('cards', useCallback(setCards, [setCards]))
+  const storeSetCards = useStore((s) => s.setCards)
+  useCollection('cards', useCallback(storeSetCards, [storeSetCards]))
+
+  const me = players.find((p) => p.id === claimedPlayerId)
+  const myTeam = me?.teamId ? teams.find((t) => t.id === me.teamId) : null
+
+  // Compute badge: draws available for my team OR new non-secret activation
+  useEffect(() => {
+    const totalDrawsUsed = cards.filter((c) => c.drawnByTeamId === myTeam?.id).length
+    const drawsEarned = myTeam?.cardTicks ?? 0
+    const drawsAvailable = Math.max(0, drawsEarned - totalDrawsUsed)
+
+    const lastSeen = parseInt(localStorage.getItem(LAST_SEEN_KEY) ?? '0', 10)
+    const latestActivation = cards
+      .filter((c) => c.activatedAt && !c.isSecret)
+      .reduce((max, c) => Math.max(max, c.activatedAt?.seconds ?? 0), 0)
+
+    const hasNew = latestActivation > lastSeen || drawsAvailable > 0
+    setCardBadge(hasNew)
+  }, [cards, myTeam, setCardBadge])
+
+  // Clear badge when this page is open
+  useEffect(() => {
+    const latestActivation = cards
+      .filter((c) => c.activatedAt && !c.isSecret)
+      .reduce((max, c) => Math.max(max, c.activatedAt?.seconds ?? 0), 0)
+
+    if (latestActivation > 0) {
+      localStorage.setItem(LAST_SEEN_KEY, String(latestActivation))
+    }
+    setCardBadge(false)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <main className="pt-24 pb-32 px-5 max-w-2xl mx-auto">
@@ -35,7 +74,7 @@ export default function Cards() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`
-              flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg text-xs font-bold
+              flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg
               transition-all active:scale-95
               ${activeTab === tab.id
                 ? 'bg-surface-container-lowest text-secondary shadow-sm'
@@ -49,15 +88,10 @@ export default function Cards() {
             >
               {tab.icon}
             </span>
-            <span className="hidden xs:inline">{tab.label}</span>
+            <span className="text-xs font-bold truncate">{tab.label}</span>
           </button>
         ))}
       </div>
-
-      {/* Tab label (visible on small screens where text is hidden in tabs) */}
-      <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">
-        {TABS.find((t) => t.id === activeTab)?.label}
-      </p>
 
       {/* Tab content */}
       {activeTab === 'deck' && <DeckView />}

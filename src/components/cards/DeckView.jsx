@@ -6,20 +6,20 @@ import GameCard from './GameCard'
 
 // ── Card back visual ──────────────────────────────────────────────────────────
 
-function CardBack({ dim = false, rotate = 0, offsetX = 0, offsetY = 0, scale = 1 }) {
+function CardBack({ locked = false, rotate = 0, offsetX = 0, offsetY = 0 }) {
   return (
     <div
-      className={`absolute inset-0 rounded-2xl overflow-hidden border-2 transition-all
-        ${dim ? 'border-surface-container-highest bg-surface-container' : 'border-secondary/60 bg-secondary'}
+      className={`absolute inset-0 rounded-2xl overflow-hidden border-2
+        ${locked
+          ? 'border-surface-container-highest bg-surface-container-high'
+          : 'border-secondary/60 bg-secondary'
+        }
         shadow-[0_8px_24px_rgba(0,0,0,0.18)]`}
-      style={{
-        transform: `rotate(${rotate}deg) translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
-        opacity: dim ? 0.4 : 1,
-      }}
+      style={{ transform: `rotate(${rotate}deg) translate(${offsetX}px, ${offsetY}px)` }}
     >
       {/* Diagonal stripe pattern */}
       <div
-        className="absolute inset-0 opacity-[0.08]"
+        className="absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage: 'repeating-linear-gradient(45deg, white 0px, white 1px, transparent 1px, transparent 14px)',
         }}
@@ -27,16 +27,16 @@ function CardBack({ dim = false, rotate = 0, offsetX = 0, offsetY = 0, scale = 1
       {/* Center content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
         <span
-          className={`material-symbols-outlined ${dim ? 'text-on-surface-variant' : 'text-white/60'}`}
+          className={`material-symbols-outlined ${locked ? 'text-on-surface-variant/40' : 'text-white/60'}`}
           style={{ fontSize: '3.5rem' }}
         >
-          playing_cards
+          {locked ? 'lock' : 'playing_cards'}
         </span>
         <div className="text-center">
-          <p className={`font-headline font-black text-lg tracking-tight ${dim ? 'text-on-surface-variant' : 'text-white/80'}`}>
+          <p className={`font-headline font-black text-lg tracking-tight ${locked ? 'text-on-surface-variant/50' : 'text-white/80'}`}>
             SPI
           </p>
-          <p className={`font-label text-[9px] uppercase tracking-[0.18em] ${dim ? 'text-on-surface-variant/60' : 'text-white/50'}`}>
+          <p className={`font-label text-[9px] uppercase tracking-[0.18em] ${locked ? 'text-on-surface-variant/30' : 'text-white/50'}`}>
             St. Pete Invitational
           </p>
         </div>
@@ -46,7 +46,7 @@ function CardBack({ dim = false, rotate = 0, offsetX = 0, offsetY = 0, scale = 1
         <span
           key={i}
           className={`absolute ${pos} material-symbols-outlined text-sm
-            ${dim ? 'text-on-surface-variant/20' : 'text-white/15'}`}
+            ${locked ? 'text-on-surface-variant/15' : 'text-white/15'}`}
         >
           diamond
         </span>
@@ -57,30 +57,41 @@ function CardBack({ dim = false, rotate = 0, offsetX = 0, offsetY = 0, scale = 1
 
 // ── Drawn card overlay ────────────────────────────────────────────────────────
 
-function DrawnCardOverlay({ card, onClose }) {
+function DrawnCardOverlay({ card, drawsRemaining, onClose, onDrawAnother, drawing }) {
   if (!card) return null
+
+  // Stable seed based on card id to avoid re-randomising on re-render
+  const seed = card.id ? card.id.charCodeAt(0) % 5 : 0
+
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center px-6"
-      style={{ backgroundColor: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(4px)' }}
+    <div
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center px-6"
+      style={{ backgroundColor: 'rgba(0,0,0,0.80)', backdropFilter: 'blur(6px)' }}
     >
-      {/* Reveal label */}
       <div className="mb-5 text-center">
         <p className="font-headline font-black text-white text-2xl">You drew…</p>
-        <p className="text-white/60 text-sm mt-0.5">Show your team before you close this.</p>
+        <p className="text-white/60 text-sm mt-0.5">Show your team before closing.</p>
       </div>
 
-      {/* The card */}
-      <div className="animate-[card-reveal_0.35s_cubic-bezier(0.34,1.56,0.64,1)_both]">
-        <GameCard card={card} seed={Math.floor(Math.random() * 5)} />
-      </div>
+      <GameCard card={card} seed={seed} />
 
-      {/* Close */}
-      <button
-        onClick={onClose}
-        className="mt-8 px-10 py-3.5 rounded-full bg-white text-on-surface font-bold text-sm active:scale-95 transition-transform shadow-lg"
-      >
-        Got it — close
-      </button>
+      <div className="mt-8 flex flex-col gap-3 w-64">
+        {drawsRemaining > 0 && (
+          <button
+            onClick={onDrawAnother}
+            disabled={drawing}
+            className="w-full py-3.5 rounded-full bg-secondary text-on-secondary font-bold text-sm active:scale-95 transition-transform disabled:opacity-60 shadow-lg"
+          >
+            {drawing ? 'Drawing…' : `Draw another (${drawsRemaining} left)`}
+          </button>
+        )}
+        <button
+          onClick={onClose}
+          className="w-full py-3.5 rounded-full bg-white/15 text-white font-bold text-sm active:scale-95 transition-transform border border-white/20"
+        >
+          Got it — close
+        </button>
+      </div>
     </div>
   )
 }
@@ -112,10 +123,13 @@ export default function DeckView() {
   const nextMilestone = (Math.floor(totalPts / 50) + 1) * 50
   const ptsToNext = nextMilestone - totalPts
 
+  // After drawing a card, remaining draws = drawsAvailable - 1 (optimistic)
+  const drawsAfterThis = Math.max(0, drawsAvailable - 1)
+
   const canDraw = drawsAvailable > 0 && deckPool.length > 0
 
-  async function handleDraw() {
-    if (!canDraw || drawing || !myTeam) return
+  async function pickAndDraw() {
+    if (deckPool.length === 0 || !myTeam) return
     setDrawing(true)
     try {
       const randomIdx = Math.floor(Math.random() * deckPool.length)
@@ -127,6 +141,16 @@ export default function DeckView() {
     } finally {
       setDrawing(false)
     }
+  }
+
+  async function handleDraw() {
+    if (!canDraw || drawing) return
+    await pickAndDraw()
+  }
+
+  async function handleDrawAnother() {
+    setDrawnCard(null)
+    await pickAndDraw()
   }
 
   return (
@@ -164,12 +188,16 @@ export default function DeckView() {
               <p className="font-headline font-bold text-on-surface text-lg">Deck empty</p>
               <p className="text-xs text-on-surface-variant mt-1">All cards have been drawn.</p>
             </div>
-          ) : (
+          ) : canDraw ? (
+            // Active: show 3 stacked cards
             <>
-              <CardBack dim={!canDraw} rotate={-7} offsetX={-10} offsetY={6} scale={0.97} />
-              <CardBack dim={!canDraw} rotate={-3} offsetX={-4} offsetY={2} scale={0.985} />
-              <CardBack dim={!canDraw} rotate={0} offsetX={0} offsetY={0} scale={1} />
+              <CardBack locked={false} rotate={-7} offsetX={-10} offsetY={6} />
+              <CardBack locked={false} rotate={-3} offsetX={-4} offsetY={2} />
+              <CardBack locked={false} rotate={0} offsetX={0} offsetY={0} />
             </>
+          ) : (
+            // Locked: single solid card, no mirage
+            <CardBack locked={true} rotate={0} offsetX={0} offsetY={0} />
           )}
         </div>
 
@@ -193,7 +221,7 @@ export default function DeckView() {
           {drawing ? 'Drawing…' : canDraw ? '✦ Draw a Card' : `Earn ${ptsToNext} more pts`}
         </button>
 
-        {/* Team points display */}
+        {/* Team points */}
         {myTeam && (
           <div className="mt-4 text-center">
             <p className="text-xs text-on-surface-variant">
@@ -203,7 +231,6 @@ export default function DeckView() {
           </div>
         )}
 
-        {/* No team state */}
         {!myTeam && (
           <p className="text-sm text-on-surface-variant text-center mt-4">
             Join a team to draw cards.
@@ -212,7 +239,13 @@ export default function DeckView() {
       </div>
 
       {/* Overlay */}
-      <DrawnCardOverlay card={drawnCard} onClose={() => setDrawnCard(null)} />
+      <DrawnCardOverlay
+        card={drawnCard}
+        drawsRemaining={drawsAfterThis}
+        onClose={() => setDrawnCard(null)}
+        onDrawAnother={handleDrawAnother}
+        drawing={drawing}
+      />
     </>
   )
 }

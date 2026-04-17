@@ -48,18 +48,23 @@ export const DEFAULT_DECK = [
     name: 'Immunity',
     type: 'Power',
     description: 'Silently activate with the commissioner — immune from cards played against you for the next hour. Cards played during this window are burned. Commissioner cannot share that immunity is active.',
+    isSecret: true,
   },
 
   // ── Chaos ──────────────────────────────────────────────────────
   {
     name: 'Scottish Accent',
     type: 'Chaos',
-    description: 'Impose a Scottish accent on a team of your choosing for the next 45 minutes. Team must speak and cannot remain silent. Success → Y pts. Any member caught without accent → imposing team earns X pts.',
+    description: 'Impose a Scottish accent on a team of your choosing for the next 45 minutes. Team must speak and cannot remain silent.',
+    completionPts: 15,
+    refusalPts: 10,
   },
   {
     name: 'Unbroken Touch',
     type: 'Chaos',
-    description: 'Select a team where all members must maintain an unbroken line of physical touch for the next hour. Success → target draws a card + Y pts. Failure → imposing team earns X pts.',
+    description: 'Select a team where all members must maintain an unbroken line of physical touch for the next hour. Success also earns a free card draw.',
+    completionPts: 15,
+    refusalPts: 10,
   },
   {
     name: 'No Hands',

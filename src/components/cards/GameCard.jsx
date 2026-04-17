@@ -110,7 +110,7 @@ function IllustrationZone({ type, seed = 0 }) {
 }
 
 export default function GameCard({ card, seed = 0, compact = false }) {
-  const { name, type, description, pointsGain, pointsLoss } = card
+  const { name, type, description, pointsGain, pointsLoss, completionPts, refusalPts, assignedToName } = card
   const cfg = TYPE_CONFIG[type] ?? TYPE_CONFIG.Wild
 
   return (
@@ -125,11 +125,18 @@ export default function GameCard({ card, seed = 0, compact = false }) {
     >
       {/* ── Title bar ─────────────────────────── */}
       <div className={`${cfg.titleBg} px-3 py-2.5 flex items-center justify-between gap-2`}>
-        <span
-          className={`font-headline font-black leading-tight ${cfg.titleText} ${compact ? 'text-sm' : 'text-base'} flex-1 min-w-0 truncate`}
-        >
-          {name}
-        </span>
+        <div className="flex-1 min-w-0">
+          <span
+            className={`font-headline font-black leading-tight ${cfg.titleText} ${compact ? 'text-sm' : 'text-base'} block truncate`}
+          >
+            {name}
+          </span>
+          {assignedToName && (
+            <span className={`text-[9px] font-bold uppercase tracking-wider ${cfg.titleText} opacity-75 block truncate`}>
+              → {assignedToName}
+            </span>
+          )}
+        </div>
         <span
           className={`material-symbols-outlined ${cfg.titleText} opacity-80 flex-shrink-0`}
           style={{ fontSize: compact ? '1.1rem' : '1.3rem' }}
@@ -161,7 +168,7 @@ export default function GameCard({ card, seed = 0, compact = false }) {
           </p>
 
           {/* ── Points footer ─────────────────── */}
-          {(pointsGain || pointsLoss) && (
+          {(pointsGain || pointsLoss || completionPts || refusalPts) && (
             <div className="flex flex-col items-end mt-2 gap-0.5">
               {pointsGain && (
                 <span className={`font-headline font-black text-xs ${cfg.pointGain}`}>
@@ -171,6 +178,16 @@ export default function GameCard({ card, seed = 0, compact = false }) {
               {pointsLoss && (
                 <span className="font-headline font-black text-xs text-error">
                   -{pointsLoss} pts
+                </span>
+              )}
+              {completionPts && (
+                <span className="font-headline font-black text-xs text-tertiary">
+                  ✓ +{completionPts} pts
+                </span>
+              )}
+              {refusalPts && (
+                <span className="font-headline font-black text-xs text-error">
+                  ✗ +{refusalPts} pts
                 </span>
               )}
             </div>
