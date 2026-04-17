@@ -45,11 +45,33 @@ export default function TabBar() {
         </span>
       </div>
 
+      {/* Cards */}
+      <NavLink
+        to="/cards"
+        className={({ isActive }) =>
+          `flex flex-col items-center justify-center gap-0.5 px-3 rounded-full transition-all active:scale-90 ${
+            isActive ? 'text-primary' : 'text-on-surface-variant'
+          }`
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <span
+              className="material-symbols-outlined"
+              style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+            >
+              playing_cards
+            </span>
+            <span className="font-label font-semibold text-[10px] uppercase tracking-wider">Cards</span>
+          </>
+        )}
+      </NavLink>
+
       {/* Rules */}
       <NavLink
         to="/rules"
         className={({ isActive }) =>
-          `flex flex-col items-center justify-center gap-0.5 px-4 rounded-full transition-all active:scale-90 ${
+          `flex flex-col items-center justify-center gap-0.5 px-3 rounded-full transition-all active:scale-90 ${
             isActive ? 'text-primary' : 'text-on-surface-variant'
           }`
         }

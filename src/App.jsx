@@ -6,6 +6,7 @@ import Scoreboard from './pages/Scoreboard'
 import Rules from './pages/Rules'
 import Setup from './pages/Setup'
 import ClaimIdentity from './pages/ClaimIdentity'
+import Cards from './pages/Cards'
 import { useCompetition } from './hooks/useCompetition'
 import { usePlayers } from './hooks/usePlayers'
 import { useTeams } from './hooks/useTeams'
@@ -37,6 +38,7 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Scoreboard />} />
+        <Route path="/cards" element={<Cards />} />
         <Route path="/rules" element={<Rules />} />
         {isCommissioner && <Route path="/setup" element={<Setup />} />}
       </Routes>
