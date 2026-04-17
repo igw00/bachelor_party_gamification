@@ -6,130 +6,279 @@ export const CARD_TYPES = ['Power', 'Chaos', 'Wild']
 
 export const MAX_ACTIVE_CARDS = 2
 
-/** Real 22-card deck from the game design doc */
-export const DEFAULT_DECK = [
-  // ── Power ──────────────────────────────────────────────────────
+/**
+ * Single copy of each card — exact names/descriptions from Cards_v3.csv.
+ * target: 'Team' | 'Individual'
+ * Individual cards are auto-assigned to a random team member at draw time.
+ */
+const BASE_DECK = [
+  // ── Team · Chaos ───────────────────────────────────────────────
   {
-    name: 'Point Multiplier',
-    type: 'Power',
-    description: 'For the next hour, all points earned will be on a 2x multiplier.',
-  },
-  {
-    name: 'Double Down',
-    type: 'Power',
-    description: "Your team's points for the next single event are doubled. Must be declared before the event starts.",
-  },
-  {
-    name: 'Star Player',
-    type: 'Power',
-    description: 'Designate one player — their individual points count 3× for the next event. They must hold a drink while playing.',
-  },
-  {
-    name: 'Happy Hour',
-    type: 'Power',
-    description: 'Every drink your team finishes in the next 60 minutes earns 3 pts instead of 1. Drink points stack with all other bonuses.',
-  },
-  {
-    name: 'Deflect',
-    type: 'Power',
-    description: 'Bounce any Chaos card played against your team to the other. Can be played as a reaction — even after a Chaos card is announced but before it takes effect.',
-  },
-  {
-    name: 'Mulligan',
-    type: 'Power',
-    description: 'Re-do one result from the last completed event — replay a cornhole game, a bar golf hole, or a relay heat. Best result counts.',
-  },
-  {
-    name: 'Steal the Points',
-    type: 'Power',
-    description: 'Take the points earned from an event or activity from an opposing team. Announcement required. Target team captain must acknowledge.',
-  },
-  {
-    name: 'Immunity',
-    type: 'Power',
-    description: 'Silently activate with the commissioner — immune from cards played against you for the next hour. Cards played during this window are burned. Commissioner cannot share that immunity is active.',
-    isSecret: true,
-  },
-
-  // ── Chaos ──────────────────────────────────────────────────────
-  {
-    name: 'Scottish Accent',
+    name: 'Accent Card',
     type: 'Chaos',
-    description: 'Impose a Scottish accent on a team of your choosing for the next 45 minutes. Team must speak and cannot remain silent.',
-    completionPts: 15,
-    refusalPts: 10,
+    target: 'Team',
+    description:
+      'Impose one of the following accents on a team of your choosing for the next 45 minutes. Team must speak — silence is not permitted. Any member caught without attempting the accent is a violation for the whole team.\n• Midwestern (Chicago)\n• Japanese\n• Irish\n• Australian\n• Anime girl\n• Scottish\n• Baltimore/Philly\n• Sign language (nonverbal)',
+    completionPts: 60,
+    refusalPts: 40,
   },
   {
-    name: 'Unbroken Touch',
+    name: 'Unbroken Physical Touch',
     type: 'Chaos',
-    description: 'Select a team where all members must maintain an unbroken line of physical touch for the next hour. Success also earns a free card draw.',
-    completionPts: 15,
-    refusalPts: 10,
+    target: 'Team',
+    description:
+      'Select a team where all members must maintain an unbroken chain of physical contact for the next hour. Any break in the chain constitutes an immediate fail.',
+    completionPts: 75,
+    refusalPts: 50,
   },
   {
-    name: 'No Hands',
+    name: 'Cannot Use Own Hands',
     type: 'Chaos',
-    description: "For the next hour the entire team cannot use their own hands to drink or eat. You may use each other's hands, or those of strangers, to be fed.",
+    target: 'Team',
+    description:
+      'For the next hour the entire targeted team cannot use their own hands to eat or drink. Teammates or willing strangers must feed them. Bathroom trips are exempt. Any member using their own hands constitutes a fail for the whole team.',
+    completionPts: 65,
+    refusalPts: 40,
   },
   {
-    name: '7s',
+    name: '7 Shots',
     type: 'Chaos',
-    description: '7 shots must be consumed in combination throughout the team.',
+    target: 'Team',
+    description:
+      '7 shots must be consumed collectively by the targeted team before they can earn any more event points. Drink points still accumulate normally. Distribution among willing members is their choice.',
+    completionPts: 50,
+    refusalPts: 35,
   },
   {
     name: 'Cigs',
     type: 'Chaos',
-    description: "Team must stop whatever they're doing and acquire + finish a pack of cigarettes before they can earn any more points.",
+    target: 'Team',
+    description:
+      'Targeted team must stop what they are doing, acquire and finish a full pack of cigarettes before earning any more event points. Distribution among members is their choice. Cigar substitution (3 minutes hotboxing per cigarette equivalent) is valid and judged by the other two Captains.',
+    completionPts: 80,
+    refusalPts: 55,
   },
   {
-    name: 'Public Announcement',
+    name: 'Make an Announcement to the Public',
     type: 'Chaos',
-    description: 'Loudly request that the public environment be quiet and listen to your announcement. Cannot involve the groom. Must successfully get the establishment to quiet down to count.',
+    target: 'Team',
+    description:
+      'Loudly request that the public establishment quiet down to hear a public announcement. Must successfully get the venue to quiet — at least half of nearby patrons must pause and acknowledge. Cannot involve the groom. Pass/fail judged by the other two Captains.',
+    completionPts: 70,
+    refusalPts: 45,
   },
   {
     name: 'Text Your Dad',
     type: 'Chaos',
-    description: 'All members must text their dad: "I could beat your ass." Do not add context until the bachelor party is over.',
+    target: 'Team',
+    description:
+      'Every member of the targeted team must text their father that they could beat his ass. No context may be added. No follow-up or explanation until the bachelor party is over. Completion verified by screenshot shown to both other Captains.',
+    completionPts: 60,
+    refusalPts: 40,
   },
   {
-    name: 'Sing Your Heart Out',
+    name: 'Sing',
     type: 'Chaos',
-    description: 'Team nominates one member to sing their best for a minute, in front of the group. Must meet the agreed threshold for lyrics and honest effort.',
+    target: 'Team',
+    description:
+      'The targeted team nominates one member to sing as best they can for one full minute in front of the entire group. Must demonstrate honest effort — enough lyrics and genuine attempt to sing well. Pass/fail by majority vote of the other two Captains. Quitting before 60 seconds or humming instead of singing = fail. Individual will also receive 30 points.',
+    completionPts: 55,
+    refusalPts: 35,
   },
   {
     name: 'Chug Team',
     type: 'Chaos',
-    description: "Every member of the selected team must collectively chug all drinks of all game participants — without explaining what's happening.",
+    target: 'Team',
+    description:
+      'Every member of the targeted team must collectively chug all the drinks currently held by all game participants. They must do this without explaining to anyone what is happening. Any explanation given before all drinks are finished = immediate fail.',
+    completionPts: 75,
+    refusalPts: 50,
   },
 
-  // ── Wild ───────────────────────────────────────────────────────
+  // ── Team · Power ───────────────────────────────────────────────
+  {
+    name: 'Point Multiplier',
+    type: 'Power',
+    target: 'Team',
+    description:
+      'For the next hour all points earned by your team are on a 2× multiplier. Must be declared before the hour begins.',
+  },
+  {
+    name: 'Double Down',
+    type: 'Power',
+    target: 'Team',
+    description:
+      "Your team's points for the next single event are doubled. Must be declared before the event starts. Does not stack with other multipliers.",
+  },
+  {
+    name: 'Star Player',
+    type: 'Power',
+    target: 'Team',
+    description:
+      'Designate one player on your team. Their individual points count 3× for the next event. They must hold a drink while playing. Must be declared before the event starts.',
+  },
+  {
+    name: 'Happy Hour',
+    type: 'Power',
+    target: 'Team',
+    description:
+      'Every drink your team finishes in the next 60 minutes earns 5 pts instead of 1. Drink points stack with all other bonuses.',
+  },
+  {
+    name: 'Deflect',
+    type: 'Power',
+    target: 'Team',
+    description:
+      'Bounce any Chaos card played against your team back onto the imposing team instead. Can be played as a reaction — after a Chaos card is announced but before it takes effect.',
+  },
+  {
+    name: 'Steal the Points',
+    type: 'Power',
+    target: 'Team',
+    description:
+      'Take the tally placement points earned from the most recently completed event from one opposing team and add them to yours. Announcement required. Target team Captain must acknowledge before transfer occurs. Inflicted team still keeps their point tally.',
+  },
+  {
+    name: 'Immunity',
+    type: 'Power',
+    target: 'Team',
+    description:
+      'Silently activate this card by showing it to one of the other two Captains to register it. Your team becomes immune to all Chaos cards for the next hour. Cards played against your team during this window are burned. The registering Captain may not reveal that Immunity has been activated.',
+    isSecret: true,
+  },
+
+  // ── Team · Wild ────────────────────────────────────────────────
   {
     name: 'Player Swap',
     type: 'Wild',
-    description: 'Team captain who draws this can swap any 2 players on any 2 teams.',
+    target: 'Team',
+    description:
+      'The Captain who draws this card selects any players from any 2 teams and swaps them for the rest of the game. Drink points travel with the player. Event points already earned stay with the original team.',
   },
   {
     name: 'Redraw',
     type: 'Wild',
-    description: 'Return this card to the deck, then immediately draw 2 cards — keeping both. No points change hands. Pure card economy.',
+    target: 'Team',
+    description:
+      'The team that plays this card returns it to the deck then immediately draws 2 cards keeping both. No points change hands. No players move. Pure card economy play.',
   },
   {
     name: "Captain's Challenge",
     type: 'Wild',
-    description: "Playing captain issues a direct 1v1 challenge to any other captain. Any format, on the spot, under 5 minutes, no drinking. Loser's team loses 20 pts. Winner gains nothing.",
+    target: 'Team',
+    description:
+      "The playing Captain issues a direct 1v1 challenge to the Captain of any other team. Any format, any task completable on the spot in under 5 minutes. Loser's team loses 20 pts. Winner's team gains 20.",
+    pointsLoss: 20,
+    pointsGain: 20,
+  },
+  {
+    name: 'Intel',
+    type: 'Wild',
+    target: 'Team',
+    description:
+      "The Captain of this team may walk over to each of the other two Captains and view all unplayed cards in their hand. The Captain may not share this information with their own team members. Other Captains must comply and show their hand.",
+  },
+  {
+    name: 'Wager',
+    type: 'Wild',
+    target: 'Team',
+    description:
+      "Your Captain wagers a declared number of points against another team's Captain. The third team's Captain designs and judges the challenge — it must be as even as possible for both participants. Both Captains agree to the wager amount before the challenge begins. Loser's team loses the wagered points. Winner's team gains them.",
+  },
+
+  // ── Individual · Power ─────────────────────────────────────────
+  {
+    name: 'Point Multiplier',
+    type: 'Power',
+    target: 'Individual',
+    description:
+      "Automatically assigned to a random member of your team. For the next hour that individual's points are on a 2× multiplier. Must be declared before the hour begins.",
+  },
+  {
+    name: 'Double Down',
+    type: 'Power',
+    target: 'Individual',
+    description:
+      "Automatically assigned to a random member of your team. That individual's placement points for the next single event are doubled. Must be declared before the event starts. Does not stack with other multipliers.",
+  },
+  {
+    name: 'Star Player',
+    type: 'Power',
+    target: 'Individual',
+    description:
+      "Automatically assigned to a random member of your team. That individual's points count 3× for the next event. They must hold a drink while playing. Must be declared before the event starts.",
+  },
+  {
+    name: 'Happy Hour',
+    type: 'Power',
+    target: 'Individual',
+    description:
+      'Automatically assigned to a random member of your team. Every drink that individual finishes in the next 60 minutes earns them 3 pts instead of 1.',
+  },
+  {
+    name: 'Deflect',
+    type: 'Power',
+    target: 'Individual',
+    description:
+      'Automatically assigned to a random member of your team. That individual may bounce any individually-targeted card effect back onto a random member of the imposing team. Can be played as a reaction after the effect is announced but before it takes effect.',
+  },
+  {
+    name: 'Steal the Points',
+    type: 'Power',
+    target: 'Individual',
+    description:
+      'Automatically assigned to a random member of your team. That individual may take the individual points earned by any one opposing player from the most recently completed event and add them to their own total. Announcement required. Target must acknowledge.',
+  },
+  {
+    name: 'Immunity',
+    type: 'Power',
+    target: 'Individual',
+    description:
+      'Automatically assigned to a random member of your team. That individual silently registers the card by showing it face-down to one of the other two Captains. They are personally immune to any individually-targeted card effects for the next hour. The registering Captain may not reveal that Immunity has been activated.',
+    isSecret: true,
+  },
+
+  // ── Individual · Wild ──────────────────────────────────────────
+  {
+    name: 'Player Swap',
+    type: 'Wild',
+    target: 'Individual',
+    description:
+      'Automatically assigned to a random member of your team. That individual may swap themselves with any one player on any other team for the rest of the current day. Drink points travel with the player. Event points already earned stay with the original team.',
+  },
+  {
+    name: 'Redraw',
+    type: 'Wild',
+    target: 'Individual',
+    description:
+      'Automatically assigned to a random member of your team. That individual returns this card to the deck and their team immediately draws 2 cards keeping both.',
+  },
+  {
+    name: "Captain's Challenge",
+    type: 'Wild',
+    target: 'Individual',
+    description:
+      "Automatically assigned to a random member of your team. That individual — not the Captain — issues a direct 1v1 challenge to any one player on any other team. Any format, any task completable on the spot in under 5 minutes. Cannot involve drinking. Loser loses 20 individual pts. Winner gains nothing.",
     pointsLoss: 20,
   },
   {
     name: 'Intel',
     type: 'Wild',
-    description: "The captain may see all unused cards from the other teams. May not share info with own team. Must walk over to the other captains to enforce.",
+    target: 'Individual',
+    description:
+      "Automatically assigned to a random member of your team. That individual may view all unplayed cards held by any one opposing team's Captain. They may not share this information with their own team members.",
   },
   {
     name: 'Wager',
     type: 'Wild',
-    description: "Captain wagers any number of points against another team's captain. The 3rd team's captain decides the challenge — must be as even as possible for both participants.",
+    target: 'Individual',
+    description:
+      "Automatically assigned to a random member of your team. That individual wagers a declared number of their own individual points against any one player on another team. The third team's Captain designs and judges the challenge. Loser loses the wagered individual pts. Winner gains them.",
   },
 ]
+
+/** Full deck = 2 copies of every card (68 total) */
+export const DEFAULT_DECK = [...BASE_DECK, ...BASE_DECK]
 
 /** Check if a team can activate another card */
 export function canActivateCard(activeCards) {

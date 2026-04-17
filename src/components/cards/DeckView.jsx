@@ -109,6 +109,7 @@ export default function DeckView() {
 
   const me = players.find((p) => p.id === claimedPlayerId)
   const myTeam = me?.teamId ? teams.find((t) => t.id === me.teamId) : null
+  const teamPlayers = players.filter((p) => p.teamId === myTeam?.id)
 
   // Cards available in the deck (unclaimed)
   const deckPool = cards.filter((c) => !c.heldByTeamId && !c.played)
@@ -134,7 +135,7 @@ export default function DeckView() {
     try {
       const randomIdx = Math.floor(Math.random() * deckPool.length)
       const picked = deckPool[randomIdx]
-      await drawCardAction(myTeam.id, picked.id, claimedPlayerId)
+      await drawCardAction(myTeam.id, picked.id, claimedPlayerId, picked, teamPlayers)
       setDrawnCard(picked)
     } catch (err) {
       console.error('Draw failed:', err)

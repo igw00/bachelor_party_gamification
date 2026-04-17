@@ -110,7 +110,7 @@ function IllustrationZone({ type, seed = 0 }) {
 }
 
 export default function GameCard({ card, seed = 0, compact = false }) {
-  const { name, type, description, pointsGain, pointsLoss, completionPts, refusalPts, assignedToName } = card
+  const { name, type, target, description, pointsGain, pointsLoss, completionPts, refusalPts, assignedToName } = card
   const cfg = TYPE_CONFIG[type] ?? TYPE_CONFIG.Wild
 
   return (
@@ -155,6 +155,11 @@ export default function GameCard({ card, seed = 0, compact = false }) {
         <span className={`text-[9px] font-black uppercase tracking-[0.15em] ${cfg.accentText}`}>
           {type} Card
         </span>
+        {target === 'Individual' && (
+          <span className="text-[9px] font-black uppercase tracking-wider bg-on-surface/8 text-on-surface-variant px-1.5 py-0.5 rounded-full">
+            Individual
+          </span>
+        )}
         <div className={`flex-1 h-px ${cfg.divider} border-t`} />
       </div>
 

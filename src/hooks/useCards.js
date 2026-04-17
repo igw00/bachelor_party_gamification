@@ -4,14 +4,26 @@ import useStore from '../store/useStore'
 import { useCollection, addDocument, updateDocument, setDocument } from './useFirestore'
 import { canActivateCard, assertIsCaptain, DEFAULT_DECK } from '../lib/cards'
 
-/** Standalone action — safe to call without triggering a Firestore subscription */
-export async function drawCardAction(teamId, cardId, playerId) {
-  await updateDocument('cards', cardId, {
+/**
+ * Standalone draw action — safe to call without triggering a Firestore subscription.
+ * teamPlayers: all players on the drawing team (needed for Individual card assignment).
+ */
+export async function drawCardAction(teamId, cardId, playerId, card, teamPlayers = []) {
+  const update = {
     heldByTeamId: teamId,
     drawnByTeamId: teamId,
     drawnByPlayerId: playerId ?? null,
     drawnAt: serverTimestamp(),
-  })
+  }
+
+  // Individual cards: assign to a random team member at draw time
+  if (card?.target === 'Individual' && teamPlayers.length > 0) {
+    const assigned = teamPlayers[Math.floor(Math.random() * teamPlayers.length)]
+    update.assignedToPlayerId = assigned.id
+    update.assignedToName = assigned.name
+  }
+
+  await updateDocument('cards', cardId, update)
 }
 
 export function useCards() {
