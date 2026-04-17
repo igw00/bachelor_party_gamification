@@ -1,7 +1,18 @@
 import { useCallback } from 'react'
+import { serverTimestamp } from 'firebase/firestore'
 import useStore from '../store/useStore'
 import { useCollection, addDocument, updateDocument, setDocument } from './useFirestore'
 import { canActivateCard, assertIsCaptain, DEFAULT_DECK } from '../lib/cards'
+
+/** Standalone action — safe to call without triggering a Firestore subscription */
+export async function drawCardAction(teamId, cardId, playerId) {
+  await updateDocument('cards', cardId, {
+    heldByTeamId: teamId,
+    drawnByTeamId: teamId,
+    drawnByPlayerId: playerId ?? null,
+    drawnAt: serverTimestamp(),
+  })
+}
 
 export function useCards() {
   const { cards, setCards, players } = useStore()
@@ -12,8 +23,13 @@ export function useCards() {
     await Promise.all(deck.map((card) => addDocument('cards', { ...card, heldByTeamId: null, active: false, played: false })))
   }
 
-  async function drawCard(teamId, cardId) {
-    await updateDocument('cards', cardId, { heldByTeamId: teamId })
+  async function drawCard(teamId, cardId, playerId) {
+    await updateDocument('cards', cardId, {
+      heldByTeamId: teamId,
+      drawnByTeamId: teamId,
+      drawnByPlayerId: playerId ?? null,
+      drawnAt: serverTimestamp(),
+    })
   }
 
   async function activateCard(cardId, playerId) {
