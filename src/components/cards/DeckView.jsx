@@ -203,11 +203,9 @@ export default function DeckView() {
         </div>
 
         {/* Deck count */}
-        {deckPool.length > 0 && (
-          <p className="text-xs text-on-surface-variant mb-6">
-            {deckPool.length} card{deckPool.length !== 1 ? 's' : ''} remaining in deck
-          </p>
-        )}
+        <p className="text-xs text-on-surface-variant mb-6">
+          {deckPool.length} card{deckPool.length !== 1 ? 's' : ''} remaining in deck
+        </p>
 
         {/* Draw button */}
         <button

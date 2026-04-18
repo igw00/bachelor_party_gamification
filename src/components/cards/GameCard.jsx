@@ -1,3 +1,5 @@
+import { DEFAULT_DECK } from '../../lib/cards'
+
 /**
  * GameCard — Yu-Gi-Oh–inspired card layout for the meta-game card system.
  *
@@ -110,7 +112,14 @@ function IllustrationZone({ type, seed = 0 }) {
 }
 
 export default function GameCard({ card, seed = 0, compact = false }) {
-  const { name, type, target, description, pointsGain, pointsLoss, completionPts, refusalPts, assignedToName } = card
+  const { name, type, target, description, assignedToName } = card
+  // Fall back to static deck definition for point fields — Firestore docs seeded
+  // before these fields were added won't have them on the card object.
+  const staticDef = DEFAULT_DECK.find((c) => c.name === card.name && c.target === card.target) ?? {}
+  const pointsGain    = card.pointsGain    ?? staticDef.pointsGain
+  const pointsLoss    = card.pointsLoss    ?? staticDef.pointsLoss
+  const completionPts = card.completionPts ?? staticDef.completionPts
+  const refusalPts    = card.refusalPts    ?? staticDef.refusalPts
   const cfg = TYPE_CONFIG[type] ?? TYPE_CONFIG.Wild
 
   return (

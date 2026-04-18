@@ -13,17 +13,22 @@ export function useRosterSeed() {
     const unsub = subscribeToCollection('players', async (docs) => {
       if (docs.length > 0 || seeded.current) return
       seeded.current = true
-      await Promise.all(
-        ROSTER.map((name) =>
-          addDocument('players', {
-            name,
-            teamId: null,
-            isCaptain: false,
-            individualPoints: 0,
-            claimed: false,
-          })
+      try {
+        await Promise.all(
+          ROSTER.map((name) =>
+            addDocument('players', {
+              name,
+              teamId: null,
+              isCaptain: false,
+              individualPoints: 0,
+              claimed: false,
+            })
+          )
         )
-      )
+        console.log('[useRosterSeed] Seeded', ROSTER.length, 'players successfully')
+      } catch (err) {
+        console.error('[useRosterSeed] Failed to seed players:', err)
+      }
     })
     return unsub
   }, [])
