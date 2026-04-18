@@ -1,5 +1,7 @@
 /**
  * Card meta-game logic — all card management lives here.
+ * Source of truth: Cards_v3.csv
+ * completionPts / refusalPts are doubled from CSV values.
  */
 
 export const CARD_TYPES = ['Power', 'Chaos', 'Wild']
@@ -7,9 +9,10 @@ export const CARD_TYPES = ['Power', 'Chaos', 'Wild']
 export const MAX_ACTIVE_CARDS = 2
 
 /**
- * Single copy of each card — exact names/descriptions from Cards_v3.csv.
+ * 33 unique cards — 21 Team + 12 Individual.
  * target: 'Team' | 'Individual'
  * Individual cards are auto-assigned to a random team member at draw time.
+ * DEFAULT_DECK doubles this to 66 total.
  */
 const BASE_DECK = [
   // ── Team · Chaos ───────────────────────────────────────────────
@@ -18,7 +21,7 @@ const BASE_DECK = [
     type: 'Chaos',
     target: 'Team',
     description:
-      'Impose one of the following accents on a team of your choosing for the next 45 minutes. Team must speak — silence is not permitted. Any member caught without attempting the accent is a violation for the whole team.\n• Midwestern (Chicago)\n• Japanese\n• Irish\n• Australian\n• Anime girl\n• Scottish\n• Baltimore/Philly\n• Sign language (nonverbal)',
+      'Impose one of the following accents on a team of your choosing for the next 45 minutes. Team must speak — silence is not permitted. Any member caught without attempting the accent constitutes a violation for the whole team.\n• Midwestern (Chicago)\n• Japanese\n• Irish\n• Australian\n• Anime girl\n• Scottish\n• Baltimore/Philly\n• Sign language (nonverbal)',
     completionPts: 120,
     refusalPts: 80,
   },
@@ -136,14 +139,14 @@ const BASE_DECK = [
     type: 'Power',
     target: 'Team',
     description:
-      'Take the tally placement points earned from the most recently completed event from one opposing team and add them to yours. Announcement required. Target team Captain must acknowledge before transfer occurs. Inflicted team still keeps their point tally.',
+      'Take the tally placement points earned from the most recently completed event or activity from one opposing team and add them to yours. Announcement required. Target team Captain must acknowledge before transfer occurs. Inflicted team still gets to keep their point tally as well.',
   },
   {
     name: 'Immunity',
     type: 'Power',
     target: 'Team',
     description:
-      'Silently activate this card by showing it to one of the other two Captains to register it. Your team becomes immune to all Chaos cards for the next hour. Cards played against your team during this window are burned. The registering Captain may not reveal that Immunity has been activated.',
+      'Silently activate this card by showing it to one of the other two Captains (not your own team members) to register it. Your team becomes immune to all Chaos cards for the next hour. Cards played against your team during this window are burned. The registering Captain may not reveal that Immunity has been activated.',
     isSecret: true,
   },
 
@@ -192,49 +195,49 @@ const BASE_DECK = [
     type: 'Power',
     target: 'Individual',
     description:
-      "Automatically assigned to a random member of your team. For the next hour that individual's points are on a 2× multiplier. Must be declared before the hour begins.",
+      "When drawn this card is automatically assigned to a random member of the drawing team. For the next hour that individual's points are on a 2× multiplier. Must be declared before the hour begins.",
   },
   {
     name: 'Double Down',
     type: 'Power',
     target: 'Individual',
     description:
-      "Automatically assigned to a random member of your team. That individual's placement points for the next single event are doubled. Must be declared before the event starts. Does not stack with other multipliers.",
+      "When drawn this card is automatically assigned to a random member of the drawing team. That individual's placement points for the next single event are doubled. Must be declared before the event starts. Does not stack with other multipliers.",
   },
   {
     name: 'Star Player',
     type: 'Power',
     target: 'Individual',
     description:
-      "Automatically assigned to a random member of your team. That individual's points count 3× for the next event. They must hold a drink while playing. Must be declared before the event starts.",
+      "When drawn this card is automatically assigned to a random member of the drawing team. That individual's points count 3× for the next event. They must hold a drink while playing. Must be declared before the event starts.",
   },
   {
     name: 'Happy Hour',
     type: 'Power',
     target: 'Individual',
     description:
-      'Automatically assigned to a random member of your team. Every drink that individual finishes in the next 60 minutes earns them 3 pts instead of 1.',
+      'When drawn this card is automatically assigned to a random member of the drawing team. Every drink that individual finishes in the next 60 minutes earns them 3 pts instead of 1.',
   },
   {
     name: 'Deflect',
     type: 'Power',
     target: 'Individual',
     description:
-      'Automatically assigned to a random member of your team. That individual may bounce any individually-targeted card effect back onto a random member of the imposing team. Can be played as a reaction after the effect is announced but before it takes effect.',
+      'When drawn this card is automatically assigned to a random member of the drawing team. That individual may bounce any individually-targeted card effect back onto a random member of the imposing team. Can be played as a reaction after the effect is announced but before it takes effect.',
   },
   {
     name: 'Steal the Points',
     type: 'Power',
     target: 'Individual',
     description:
-      'Automatically assigned to a random member of your team. That individual may take the individual points earned by any one opposing player from the most recently completed event and add them to their own total. Announcement required. Target must acknowledge.',
+      'When drawn this card is automatically assigned to a random member of the drawing team. That individual may take the individual points earned by any one opposing player from the most recently completed event and add them to their own individual total. Announcement required. Target must acknowledge.',
   },
   {
     name: 'Immunity',
     type: 'Power',
     target: 'Individual',
     description:
-      'Automatically assigned to a random member of your team. That individual silently registers the card by showing it face-down to one of the other two Captains. They are personally immune to any individually-targeted card effects for the next hour. The registering Captain may not reveal that Immunity has been activated.',
+      'When drawn this card is automatically assigned to a random member of the drawing team. That individual silently registers the card by showing it face-down to one of the other two Captains. They are personally immune to any individually-targeted card effects for the next hour. The registering Captain may not reveal that Immunity has been activated.',
     isSecret: true,
   },
 
@@ -244,21 +247,21 @@ const BASE_DECK = [
     type: 'Wild',
     target: 'Individual',
     description:
-      'Automatically assigned to a random member of your team. That individual may swap themselves with any one player on any other team for the rest of the current day. Drink points travel with the player. Event points already earned stay with the original team.',
+      'When drawn this card is automatically assigned to a random member of the drawing team. That individual may swap themselves with any one player on any other team for the rest of the current day. Drink points travel with the player. Event points already earned stay with the original team.',
   },
   {
     name: 'Redraw',
     type: 'Wild',
     target: 'Individual',
     description:
-      'Automatically assigned to a random member of your team. That individual returns this card to the deck and their team immediately draws 2 cards keeping both.',
+      'When drawn this card is automatically assigned to a random member of the drawing team. That individual returns this card to the deck and their team immediately draws 2 cards keeping both.',
   },
   {
     name: "Captain's Challenge",
     type: 'Wild',
     target: 'Individual',
     description:
-      "Automatically assigned to a random member of your team. That individual — not the Captain — issues a direct 1v1 challenge to any one player on any other team. Any format, any task completable on the spot in under 5 minutes. Cannot involve drinking. Loser loses 20 individual pts. Winner gains nothing.",
+      "When drawn this card is automatically assigned to a random member of the drawing team. That individual — not the Captain — issues a direct 1v1 challenge to any one player on any other team. Any format, any task completable on the spot in under 5 minutes. Cannot involve drinking. Loser loses 20 individual pts. Winner gains nothing.",
     pointsLoss: 20,
   },
   {
@@ -266,18 +269,18 @@ const BASE_DECK = [
     type: 'Wild',
     target: 'Individual',
     description:
-      "Automatically assigned to a random member of your team. That individual may view all unplayed cards held by any one opposing team's Captain. They may not share this information with their own team members.",
+      "When drawn this card is automatically assigned to a random member of the drawing team. That individual may view all unplayed cards held by any one opposing team's Captain. They may not share this information with their own team members.",
   },
   {
     name: 'Wager',
     type: 'Wild',
     target: 'Individual',
     description:
-      "Automatically assigned to a random member of your team. That individual wagers a declared number of their own individual points against any one player on another team. The third team's Captain designs and judges the challenge. Loser loses the wagered individual pts. Winner gains them.",
+      "When drawn this card is automatically assigned to a random member of the drawing team. That individual wagers a declared number of their own individual points against any one player on another team. The third team's Captain designs and judges the challenge. Loser loses the wagered individual pts. Winner gains them.",
   },
 ]
 
-/** Full deck = 2 copies of every card (68 total) */
+/** Full deck = 2 copies of every card (66 total) */
 export const DEFAULT_DECK = [...BASE_DECK, ...BASE_DECK]
 
 /** Check if a team can activate another card */

@@ -26,6 +26,30 @@ export async function drawCardAction(teamId, cardId, playerId, card, teamPlayers
   await updateDocument('cards', cardId, update)
 }
 
+/**
+ * Reshuffle all played cards back into the draw pool.
+ * Called automatically when the undrawn deck is empty and a team tries to draw.
+ * Returns the list of cards that were reshuffled so the caller can pick from them immediately.
+ */
+export async function reshuffleAction(playedCards) {
+  await Promise.all(
+    playedCards.map((card) =>
+      updateDocument('cards', card.id, {
+        played: false,
+        heldByTeamId: null,
+        active: false,
+        activatedAt: null,
+        activatedByPlayerId: null,
+        drawnByTeamId: null,
+        drawnByPlayerId: null,
+        drawnAt: null,
+        assignedToPlayerId: null,
+        assignedToName: null,
+      })
+    )
+  )
+}
+
 export function useCards() {
   const { cards, setCards, players } = useStore()
 

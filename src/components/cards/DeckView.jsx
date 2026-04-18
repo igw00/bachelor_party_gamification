@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useIdentity } from '../../hooks/useIdentity'
-import { drawCardAction } from '../../hooks/useCards'
+import { drawCardAction, reshuffleAction } from '../../hooks/useCards'
 import useStore from '../../store/useStore'
 import GameCard from './GameCard'
 
@@ -111,8 +111,11 @@ export default function DeckView() {
   const myTeam = me?.teamId ? teams.find((t) => t.id === me.teamId) : null
   const teamPlayers = players.filter((p) => p.teamId === myTeam?.id)
 
-  // Cards available in the deck (unclaimed)
+  // Cards available in the undrawn deck
   const deckPool = cards.filter((c) => !c.heldByTeamId && !c.played)
+  // Cards that have been played — available for reshuffle when deck is empty
+  const playedPool = cards.filter((c) => c.played)
+  const needsReshuffle = deckPool.length === 0 && playedPool.length > 0
 
   // How many draws has my team earned vs. used
   const totalDrawsUsed = cards.filter((c) => c.drawnByTeamId === myTeam?.id).length
@@ -127,14 +130,21 @@ export default function DeckView() {
   // After drawing a card, remaining draws = drawsAvailable - 1 (optimistic)
   const drawsAfterThis = Math.max(0, drawsAvailable - 1)
 
-  const canDraw = drawsAvailable > 0 && deckPool.length > 0
+  const hasDrawableCards = deckPool.length > 0 || needsReshuffle
+  const canDraw = drawsAvailable > 0 && hasDrawableCards
 
   async function pickAndDraw() {
-    if (deckPool.length === 0 || !myTeam) return
+    if (!myTeam || !hasDrawableCards) return
     setDrawing(true)
     try {
-      const randomIdx = Math.floor(Math.random() * deckPool.length)
-      const picked = deckPool[randomIdx]
+      let pool = deckPool
+      if (pool.length === 0 && playedPool.length > 0) {
+        // Reshuffle all played cards back into the deck, then draw from them
+        await reshuffleAction(playedPool)
+        pool = playedPool
+      }
+      const randomIdx = Math.floor(Math.random() * pool.length)
+      const picked = pool[randomIdx]
       await drawCardAction(myTeam.id, picked.id, claimedPlayerId, picked, teamPlayers)
       setDrawnCard(picked)
     } catch (err) {
@@ -181,7 +191,7 @@ export default function DeckView() {
 
         {/* Deck stack */}
         <div className="relative w-64 h-[360px] mb-8">
-          {deckPool.length === 0 ? (
+          {!hasDrawableCards ? (
             <div className="absolute inset-0 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-surface-container-highest bg-surface-container-low text-center px-6">
               <span className="material-symbols-outlined text-on-surface-variant text-5xl mb-3">
                 layers_clear
@@ -204,7 +214,9 @@ export default function DeckView() {
 
         {/* Deck count */}
         <p className="text-xs text-on-surface-variant mb-6">
-          {deckPool.length} card{deckPool.length !== 1 ? 's' : ''} remaining in deck
+          {needsReshuffle
+            ? `${playedPool.length} card${playedPool.length !== 1 ? 's' : ''} ready to reshuffle`
+            : `${deckPool.length} card${deckPool.length !== 1 ? 's' : ''} remaining in deck`}
         </p>
 
         {/* Draw button */}
@@ -217,7 +229,11 @@ export default function DeckView() {
               : 'bg-surface-container text-on-surface-variant cursor-not-allowed opacity-60'
             }`}
         >
-          {drawing ? 'Drawing…' : canDraw ? '✦ Draw a Card' : `Earn ${ptsToNext} more pts`}
+          {drawing
+            ? (needsReshuffle ? 'Reshuffling…' : 'Drawing…')
+            : canDraw
+              ? (needsReshuffle ? '✦ Reshuffle & Draw' : '✦ Draw a Card')
+              : `Earn ${ptsToNext} more pts`}
         </button>
 
         {/* Team points */}
