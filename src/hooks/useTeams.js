@@ -15,7 +15,7 @@ export function useTeams() {
       captainPlayerId: null,
       totalPoints: 0,
       dayPoints: { 1: 0, 2: 0, 3: 0 },
-      cardTicks: 0,
+      cardTicks: 1,
       cardsHeld: [],
       cardsActive: [],
       captainBankSpent: 0,
