@@ -113,13 +113,13 @@ function IllustrationZone({ type, seed = 0 }) {
 
 export default function GameCard({ card, seed = 0, compact = false }) {
   const { name, type, target, description, assignedToName } = card
-  // Fall back to static deck definition for point fields — Firestore docs seeded
-  // before these fields were added won't have them on the card object.
+  // Always source point fields from the static deck definition so Firestore
+  // docs seeded from an older version of cards.js never show stale values.
   const staticDef = DEFAULT_DECK.find((c) => c.name === card.name && c.target === card.target) ?? {}
-  const pointsGain    = card.pointsGain    ?? staticDef.pointsGain
-  const pointsLoss    = card.pointsLoss    ?? staticDef.pointsLoss
-  const completionPts = card.completionPts ?? staticDef.completionPts
-  const refusalPts    = card.refusalPts    ?? staticDef.refusalPts
+  const pointsGain    = staticDef.pointsGain
+  const pointsLoss    = staticDef.pointsLoss
+  const completionPts = staticDef.completionPts
+  const refusalPts    = staticDef.refusalPts
   const cfg = TYPE_CONFIG[type] ?? TYPE_CONFIG.Wild
 
   return (

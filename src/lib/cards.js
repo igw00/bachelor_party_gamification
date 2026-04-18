@@ -19,8 +19,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'Impose one of the following accents on a team of your choosing for the next 45 minutes. Team must speak — silence is not permitted. Any member caught without attempting the accent is a violation for the whole team.\n• Midwestern (Chicago)\n• Japanese\n• Irish\n• Australian\n• Anime girl\n• Scottish\n• Baltimore/Philly\n• Sign language (nonverbal)',
-    completionPts: 60,
-    refusalPts: 40,
+    completionPts: 120,
+    refusalPts: 80,
   },
   {
     name: 'Unbroken Physical Touch',
@@ -28,8 +28,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'Select a team where all members must maintain an unbroken chain of physical contact for the next hour. Any break in the chain constitutes an immediate fail.',
-    completionPts: 75,
-    refusalPts: 50,
+    completionPts: 150,
+    refusalPts: 100,
   },
   {
     name: 'Cannot Use Own Hands',
@@ -37,8 +37,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'For the next hour the entire targeted team cannot use their own hands to eat or drink. Teammates or willing strangers must feed them. Bathroom trips are exempt. Any member using their own hands constitutes a fail for the whole team.',
-    completionPts: 65,
-    refusalPts: 40,
+    completionPts: 130,
+    refusalPts: 80,
   },
   {
     name: '7 Shots',
@@ -46,8 +46,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       '7 shots must be consumed collectively by the targeted team before they can earn any more event points. Drink points still accumulate normally. Distribution among willing members is their choice.',
-    completionPts: 50,
-    refusalPts: 35,
+    completionPts: 100,
+    refusalPts: 70,
   },
   {
     name: 'Cigs',
@@ -55,8 +55,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'Targeted team must stop what they are doing, acquire and finish a full pack of cigarettes before earning any more event points. Distribution among members is their choice. Cigar substitution (3 minutes hotboxing per cigarette equivalent) is valid and judged by the other two Captains.',
-    completionPts: 80,
-    refusalPts: 55,
+    completionPts: 160,
+    refusalPts: 110,
   },
   {
     name: 'Make an Announcement to the Public',
@@ -64,8 +64,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'Loudly request that the public establishment quiet down to hear a public announcement. Must successfully get the venue to quiet — at least half of nearby patrons must pause and acknowledge. Cannot involve the groom. Pass/fail judged by the other two Captains.',
-    completionPts: 70,
-    refusalPts: 45,
+    completionPts: 140,
+    refusalPts: 90,
   },
   {
     name: 'Text Your Dad',
@@ -73,8 +73,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'Every member of the targeted team must text their father that they could beat his ass. No context may be added. No follow-up or explanation until the bachelor party is over. Completion verified by screenshot shown to both other Captains.',
-    completionPts: 60,
-    refusalPts: 40,
+    completionPts: 120,
+    refusalPts: 80,
   },
   {
     name: 'Sing',
@@ -82,8 +82,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'The targeted team nominates one member to sing as best they can for one full minute in front of the entire group. Must demonstrate honest effort — enough lyrics and genuine attempt to sing well. Pass/fail by majority vote of the other two Captains. Quitting before 60 seconds or humming instead of singing = fail. Individual will also receive 30 points.',
-    completionPts: 55,
-    refusalPts: 35,
+    completionPts: 110,
+    refusalPts: 70,
   },
   {
     name: 'Chug Team',
@@ -91,8 +91,8 @@ const BASE_DECK = [
     target: 'Team',
     description:
       'Every member of the targeted team must collectively chug all the drinks currently held by all game participants. They must do this without explaining to anyone what is happening. Any explanation given before all drinks are finished = immediate fail.',
-    completionPts: 75,
-    refusalPts: 50,
+    completionPts: 150,
+    refusalPts: 100,
   },
 
   // ── Team · Power ───────────────────────────────────────────────
