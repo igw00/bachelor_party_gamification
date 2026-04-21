@@ -97,6 +97,15 @@ const BASE_DECK = [
     completionPts: 150,
     refusalPts: 100,
   },
+  {
+    name: 'Wet Clothes',
+    type: 'Chaos',
+    target: 'Team',
+    description:
+      'You must maintain a sopping wet state to ONE of the following articles of clothing of your choosing for the next hour. If you are not wearing one of the following, select from the ones that apply at the individual level at time of playing.\n• Shorts\n• Socks\n• Shirt',
+    completionPts: 150,
+    refusalPts: 100,
+  },
 
   // ── Team · Power ───────────────────────────────────────────────
   {

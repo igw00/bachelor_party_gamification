@@ -231,6 +231,8 @@ export default function Scoreboard() {
               players={players}
               cards={cards}
               events={events}
+              allTeams={sortedTeams}
+              claimedPlayerId={claimedPlayerId}
             />
           ))}
 

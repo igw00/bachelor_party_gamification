@@ -4,10 +4,11 @@ import { devReset } from '../lib/devReset'
 import { usePlayers } from '../hooks/usePlayers'
 import { useTeams } from '../hooks/useTeams'
 import { useCompetition } from '../hooks/useCompetition'
+import { useIdentity } from '../hooks/useIdentity'
 import { updateDocument, mergeDocument, addDocument } from '../hooks/useFirestore'
 import { DEFAULT_DECK } from '../lib/cards'
 
-const IS_DEV = import.meta.env.VITE_APP_ENV === 'dev'
+const COMMISSIONER_NAME = 'Ian Waltz'
 
 const TEAM_IDS = ['teamA', 'teamB', 'teamC']
 const TEAM_DEFAULTS = ['Team Alpha', 'Team Beta', 'Team Gamma']
@@ -31,6 +32,8 @@ export default function Setup() {
   const { players } = usePlayers()
   const { createTeam, setCaptain: setTeamCaptain } = useTeams()
   const { initCompetition, completeSetup } = useCompetition()
+  const { claimedPlayerId } = useIdentity()
+  const isCommissioner = players.find((p) => p.id === claimedPlayerId)?.name === COMMISSIONER_NAME
 
   const totalAssigned = Object.values(assignments).flat().length
   const allAssigned = players.length > 0 && totalAssigned === players.length
@@ -112,7 +115,7 @@ export default function Setup() {
     return (
       <main className="pt-28 pb-32 px-5 max-w-2xl mx-auto space-y-4">
         <p className="text-on-surface-variant animate-pulse">Loading roster…</p>
-        {IS_DEV && <DevResetButton />}
+        {isCommissioner && <DevResetButton />}
       </main>
     )
   }
@@ -229,7 +232,7 @@ export default function Setup() {
           </button>
         )}
 
-        {IS_DEV && <DevResetButton />}
+        {isCommissioner && <DevResetButton />}
       </div>
     </main>
   )
