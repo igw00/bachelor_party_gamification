@@ -9,10 +9,14 @@ import { useIdentity } from '../../hooks/useIdentity'
 import { applyDay3Multiplier } from '../../lib/scoring'
 
 const SHORTCUTS = [
-  { label: 'Drink', pts: 2, icon: '🍺' },
-  { label: 'Birdie', pts: 3, icon: '⛳' },
-  { label: 'Eagle', pts: 5, icon: '🦅' },
-  { label: 'Par', pts: 1, icon: '🏌️' },
+  { label: 'Drink', pts: 5, icon: '🍺' },
+  { label: 'Par', pts: 5, icon: '🏌️' },
+  { label: 'Birdie', pts: 12, icon: '⛳' },
+  { label: 'Eagle', pts: 20, icon: '🦅' },
+  { label: 'Beer Game W', pts: 15, icon: '🏓' },
+  { label: 'Pickle/Vball W', pts: 20, icon: '🏐' },
+  { label: 'Golf Win', pts: 75, icon: '🏆' },
+  { label: 'Team Golf W', pts: 200, icon: '⭐' },
 ]
 
 export default function QuickAddSheet() {
@@ -123,7 +127,7 @@ export default function QuickAddSheet() {
           <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3">
             Quick Add
           </label>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-2 gap-y-2">
             {SHORTCUTS.map(({ label, pts, icon }) => (
               <button
                 key={label}
