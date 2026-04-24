@@ -134,7 +134,7 @@ const BASE_DECK = [
     type: 'Power',
     target: 'Team',
     description:
-      'Every drink your team finishes in the next 60 minutes earns 5 pts instead of 1. Drink points stack with all other bonuses.',
+      'Every drink your team finishes in the next 60 minutes earns 2× the normal drink points. Must be declared before the hour begins. Drink points stack with all other bonuses.',
   },
   {
     name: 'Deflect',
@@ -225,7 +225,7 @@ const BASE_DECK = [
     type: 'Power',
     target: 'Individual',
     description:
-      'When drawn this card is automatically assigned to a random member of the drawing team. Every drink that individual finishes in the next 60 minutes earns them 3 pts instead of 1.',
+      'When drawn this card is automatically assigned to a random member of the drawing team. Every drink that individual finishes in the next 60 minutes earns them 2× the normal drink points. Must be declared before the hour begins.',
   },
   {
     name: 'Deflect',
