@@ -17,16 +17,144 @@ const MEDAL_ICONS = ['emoji_events', 'workspace_premium', 'military_tech']
 const MEDAL_COLORS = ['text-primary', 'text-secondary', 'text-tertiary']
 const RANK_LABELS = ['1st', '2nd', '3rd']
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function relativeTime(seconds) {
+  if (!seconds) return ''
+  const diff = Math.floor(Date.now() / 1000) - seconds
+  if (diff < 60) return 'just now'
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
+  return `${Math.floor(diff / 86400)}d ago`
+}
+
+// ── Activity Feed ─────────────────────────────────────────────────────────────
+
+function ActivityFeed({ events, players, teams }) {
+  const [filterPlayerId, setFilterPlayerId] = useState('all')
+
+  const assignedPlayers = [...players]
+    .filter((p) => p.teamId)
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  const sorted = [...events].sort(
+    (a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0)
+  )
+
+  const filtered = filterPlayerId === 'all'
+    ? sorted
+    : sorted.filter((e) => e.playerId === filterPlayerId)
+
+  return (
+    <div>
+      {/* Filter bar */}
+      <div className="mb-4 overflow-x-auto -mx-5 px-5 scrollbar-none">
+        <div className="flex gap-2 w-max">
+          <button
+            onClick={() => setFilterPlayerId('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors flex-shrink-0
+              ${filterPlayerId === 'all'
+                ? 'bg-secondary text-on-secondary'
+                : 'bg-surface-container text-on-surface-variant'}`}
+          >
+            Everyone
+          </button>
+          {assignedPlayers.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => setFilterPlayerId(p.id === filterPlayerId ? 'all' : p.id)}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors flex-shrink-0
+                ${filterPlayerId === p.id
+                  ? 'bg-secondary text-on-secondary'
+                  : 'bg-surface-container text-on-surface-variant'}`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Feed */}
+      {filtered.length === 0 ? (
+        <div className="bg-surface-container-lowest rounded-xl p-8 text-center">
+          <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">receipt_long</span>
+          <p className="font-headline font-bold text-on-surface">No activity yet</p>
+          <p className="text-sm text-on-surface-variant mt-1">Points logged will appear here.</p>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((event) => {
+            const player = players.find((p) => p.id === event.playerId)
+            const team = teams.find((t) => t.id === event.teamId)
+            const indPts = event.pointsIndividual ?? 0
+            const teamPts = event.pointsTeam ?? 0
+
+            return (
+              <div
+                key={event.id}
+                className="bg-surface-container-lowest rounded-xl px-4 py-3 shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex items-center gap-3"
+              >
+                {/* Avatar initial */}
+                <div className="w-9 h-9 rounded-full bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                  <span className="font-headline font-black text-sm text-secondary">
+                    {player?.name?.[0] ?? '?'}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="font-semibold text-sm text-on-surface">
+                      {player?.isGroom ? `${player.name} 💍` : (player?.name ?? 'Unknown')}
+                    </span>
+                    {player?.isCaptain && (
+                      <span className="text-[9px] font-black bg-secondary-fixed text-secondary px-1.5 py-0.5 rounded-full">C</span>
+                    )}
+                    {team && (
+                      <span className="text-[10px] text-on-surface-variant">· {team.name}</span>
+                    )}
+                  </div>
+                  {event.description && (
+                    <p className="text-xs text-on-surface-variant mt-0.5 truncate">{event.description}</p>
+                  )}
+                  <p className="text-[10px] text-on-surface-variant/60 mt-0.5">
+                    Day {event.day ?? 1} · {relativeTime(event.createdAt?.seconds)}
+                  </p>
+                </div>
+
+                {/* Points */}
+                <div className="flex-shrink-0 text-right space-y-0.5">
+                  {indPts > 0 && (
+                    <div className="flex items-center gap-1 justify-end">
+                      <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-wide">ind</span>
+                      <span className="font-headline font-black text-base text-secondary">+{indPts}</span>
+                    </div>
+                  )}
+                  {teamPts > 0 && (
+                    <div className="flex items-center gap-1 justify-end">
+                      <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-wide">team</span>
+                      <span className="font-headline font-black text-base text-primary">+{teamPts}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Individual leaderboard ────────────────────────────────────────────────────
 
 function IndividualLeaderboard({ players, teams, events }) {
   const sorted = [...players]
-    .filter((p) => p.teamId) // only assigned players
+    .filter((p) => p.teamId)
     .sort((a, b) => (b.individualPoints ?? 0) - (a.individualPoints ?? 0))
 
   const topPts = sorted[0]?.individualPoints ?? 0
 
-  // Fastest mover: most individual points in last 10 events
   const recentEvents = [...events]
     .sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0))
     .slice(0, 10)
@@ -61,13 +189,11 @@ function IndividualLeaderboard({ players, teams, events }) {
               ${isTop3 ? 'border-l-4' : 'border-l-4 border-surface-container-highest'}
               ${i === 0 ? 'border-primary' : i === 1 ? 'border-secondary/40' : i === 2 ? 'border-tertiary/40' : ''}`}
           >
-            {/* Leader blob */}
             {i === 0 && (
               <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-6 -mt-6 pointer-events-none" />
             )}
 
             <div className="relative flex items-center gap-3">
-              {/* Rank */}
               <div className="w-8 text-center flex-shrink-0">
                 {isTop3 ? (
                   <span className={`material-symbols-outlined text-xl ${MEDAL_COLORS[i]}`}
@@ -75,13 +201,10 @@ function IndividualLeaderboard({ players, teams, events }) {
                     {MEDAL_ICONS[i]}
                   </span>
                 ) : (
-                  <span className="font-headline font-bold text-sm text-on-surface-variant">
-                    {i + 1}
-                  </span>
+                  <span className="font-headline font-bold text-sm text-on-surface-variant">{i + 1}</span>
                 )}
               </div>
 
-              {/* Name + team + bar */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-headline font-bold text-sm text-on-surface truncate">
@@ -99,7 +222,6 @@ function IndividualLeaderboard({ players, teams, events }) {
                     <span className="text-[10px] text-on-surface-variant truncate">{team.name}</span>
                   )}
                 </div>
-                {/* Points bar */}
                 <div className="mt-1.5 h-1 bg-surface-container rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500
@@ -109,7 +231,6 @@ function IndividualLeaderboard({ players, teams, events }) {
                 </div>
               </div>
 
-              {/* Points */}
               <div className="flex-shrink-0 text-right">
                 <span className={`font-headline font-extrabold text-2xl ${i === 0 ? 'text-primary' : 'text-on-surface'}`}>
                   {pts}
@@ -155,6 +276,12 @@ export default function Scoreboard() {
 
   const noTeams = sortedTeams.length === 0
 
+  const TABS = [
+    { id: 'teams', label: 'Teams', icon: 'groups' },
+    { id: 'individuals', label: 'Players', icon: 'person' },
+    { id: 'activity', label: 'Activity', icon: 'receipt_long' },
+  ]
+
   return (
     <main className="pt-24 pb-32 px-5 max-w-2xl mx-auto">
       {/* Title */}
@@ -167,16 +294,13 @@ export default function Scoreboard() {
         </p>
       </section>
 
-      {/* Tab toggle */}
+      {/* Tab bar */}
       <div className="flex gap-1 bg-surface-container rounded-xl p-1 mb-5">
-        {[
-          { id: 'teams', label: 'Teams', icon: 'groups' },
-          { id: 'individuals', label: 'Individuals', icon: 'person' },
-        ].map((t) => (
+        {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-sm font-bold transition-all active:scale-95
+            className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 rounded-lg text-xs font-bold transition-all active:scale-95
               ${tab === t.id
                 ? 'bg-surface-container-lowest text-secondary shadow-sm'
                 : 'text-on-surface-variant'
@@ -193,8 +317,8 @@ export default function Scoreboard() {
         ))}
       </div>
 
-      {/* Empty state (no teams yet) */}
-      {noTeams && (
+      {/* Empty state */}
+      {noTeams && tab !== 'activity' && (
         <div className="bg-surface-container-lowest rounded-xl p-8 text-center shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
           <span className="material-symbols-outlined text-4xl text-on-surface-variant mb-3 block">sports</span>
           {isCommissioner ? (
@@ -236,7 +360,6 @@ export default function Scoreboard() {
             />
           ))}
 
-          {/* Bento insight cards */}
           <div className="grid grid-cols-2 gap-4 mt-2">
             <div className="bg-tertiary-container/10 p-5 rounded-xl">
               <span className="material-symbols-outlined text-tertiary mb-2 block">trending_up</span>
@@ -262,6 +385,11 @@ export default function Scoreboard() {
       {/* Individuals tab */}
       {!noTeams && tab === 'individuals' && (
         <IndividualLeaderboard players={players} teams={teams} events={events} />
+      )}
+
+      {/* Activity feed tab — always available */}
+      {tab === 'activity' && (
+        <ActivityFeed events={events} players={players} teams={teams} />
       )}
     </main>
   )

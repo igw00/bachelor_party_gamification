@@ -7,6 +7,7 @@ import { usePlayers } from '../../hooks/usePlayers'
 import { useCompetition } from '../../hooks/useCompetition'
 import { useIdentity } from '../../hooks/useIdentity'
 import { applyDay3Multiplier } from '../../lib/scoring'
+import { serverTimestamp } from 'firebase/firestore'
 
 const SHORTCUTS = [
   { label: 'Drink', pts: 5, icon: '🍺' },
@@ -78,6 +79,7 @@ export default function QuickAddSheet() {
         pointsIndividual: individualPts,
         description: description || null,
         day,
+        createdAt: serverTimestamp(),
       })
 
       await addIndividualPoints(claimedPlayer.id, individualPts)
