@@ -18,6 +18,87 @@ const TEAM_COLORS = [
   'bg-tertiary text-on-tertiary',
 ]
 
+// ── Post-setup team editor (commissioner only) ────────────────────────────────
+
+function ManageTeams({ players, teams }) {
+  const [saving, setSaving] = useState(null) // playerId currently saving
+  const [saved, setSaved] = useState({})     // { playerId: true } flash state
+
+  const assignedPlayers = players.filter((p) => p.teamId)
+
+  async function handleTeamChange(player, newTeamId) {
+    if (newTeamId === player.teamId) return
+    setSaving(player.id)
+    try {
+      await updateDocument('players', player.id, { teamId: newTeamId })
+      setSaved((prev) => ({ ...prev, [player.id]: true }))
+      setTimeout(() => setSaved((prev) => ({ ...prev, [player.id]: false })), 1500)
+    } finally {
+      setSaving(null)
+    }
+  }
+
+  // Group by current team
+  const byTeam = {}
+  teams.forEach((t) => { byTeam[t.id] = [] })
+  assignedPlayers.forEach((p) => {
+    if (byTeam[p.teamId]) byTeam[p.teamId].push(p)
+  })
+
+  return (
+    <div className="space-y-4">
+      {teams.map((team) => (
+        <div key={team.id} className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+          {/* Team header */}
+          <div className="px-4 py-3 bg-surface-container flex items-center justify-between">
+            <span className="font-headline font-bold text-base text-on-surface">{team.name}</span>
+            <span className="text-xs text-on-surface-variant font-medium">
+              {(byTeam[team.id] ?? []).length} players
+            </span>
+          </div>
+
+          {/* Players */}
+          <div className="divide-y divide-surface-container">
+            {(byTeam[team.id] ?? [])
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((player) => (
+                <div key={player.id} className="flex items-center justify-between px-4 py-3 gap-3">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm font-semibold text-on-surface truncate">
+                      {player.isGroom ? `${player.name} 💍` : player.name}
+                    </span>
+                    {player.isCaptain && (
+                      <span className="text-[9px] font-black bg-secondary-fixed text-secondary px-1.5 py-0.5 rounded-full flex-shrink-0">C</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {saved[player.id] && (
+                      <span className="material-symbols-outlined text-sm text-tertiary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                        check_circle
+                      </span>
+                    )}
+                    <select
+                      value={player.teamId}
+                      onChange={(e) => handleTeamChange(player, e.target.value)}
+                      disabled={saving === player.id}
+                      className="text-xs font-bold bg-surface-container text-on-surface rounded-lg px-2 py-1.5 outline-none border border-surface-container-highest disabled:opacity-50"
+                    >
+                      {teams.map((t) => (
+                        <option key={t.id} value={t.id}>{t.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ── Main Setup page ───────────────────────────────────────────────────────────
+
 export default function Setup() {
   const navigate = useNavigate()
   const [teamNames, setTeamNames] = useState([...TEAM_DEFAULTS])
@@ -30,10 +111,12 @@ export default function Setup() {
   const [error, setError] = useState(null)
 
   const { players } = usePlayers()
-  const { createTeam, setCaptain: setTeamCaptain } = useTeams()
-  const { initCompetition, completeSetup } = useCompetition()
+  const { teams, createTeam, setCaptain: setTeamCaptain } = useTeams()
+  const { competition, initCompetition, completeSetup } = useCompetition()
   const { claimedPlayerId } = useIdentity()
   const isCommissioner = players.find((p) => p.id === claimedPlayerId)?.name === COMMISSIONER_NAME
+
+  const setupComplete = competition?.setupComplete === true
 
   const totalAssigned = Object.values(assignments).flat().length
   const allAssigned = players.length > 0 && totalAssigned === players.length
@@ -120,6 +203,43 @@ export default function Setup() {
     )
   }
 
+  // ── Post-setup view for commissioner ──
+  if (setupComplete && isCommissioner) {
+    return (
+      <main className="pt-28 pb-32 px-5 max-w-2xl mx-auto">
+        <section className="mb-6">
+          <h2 className="font-headline font-extrabold text-4xl text-secondary leading-tight">Manage Teams</h2>
+          <p className="font-body text-on-surface-variant mt-1">Move players between teams. Changes save instantly.</p>
+        </section>
+
+        <ManageTeams players={players} teams={teams} />
+
+        <div className="mt-6 space-y-3">
+          <DevResetButton />
+        </div>
+      </main>
+    )
+  }
+
+  // ── Post-setup view for non-commissioner ──
+  if (setupComplete) {
+    return (
+      <main className="pt-28 pb-32 px-5 max-w-2xl mx-auto">
+        <section className="mb-6">
+          <h2 className="font-headline font-extrabold text-4xl text-secondary leading-tight">Setup</h2>
+        </section>
+        <div className="bg-surface-container-lowest rounded-xl p-8 text-center">
+          <span className="material-symbols-outlined text-4xl text-tertiary mb-3 block" style={{ fontVariationSettings: "'FILL' 1" }}>
+            check_circle
+          </span>
+          <p className="font-headline font-bold text-lg text-on-surface">Competition is live</p>
+          <p className="text-sm text-on-surface-variant mt-1">Teams have been set. Check the Scoreboard.</p>
+        </div>
+      </main>
+    )
+  }
+
+  // ── Draft view ──
   return (
     <main className="pt-28 pb-32 px-5 max-w-2xl mx-auto">
       <section className="mb-6">
@@ -171,7 +291,6 @@ export default function Setup() {
 
         {draftStarted && !allAssigned && (
           <>
-            {/* Last drawn result */}
             {lastDrawn && (
               <div className={`rounded-2xl p-5 text-center ${TEAM_COLORS[TEAM_IDS.indexOf(lastDrawn.teamId)]}`}>
                 <p className="text-xs font-bold uppercase tracking-widest opacity-70 mb-1">
@@ -181,7 +300,6 @@ export default function Setup() {
               </div>
             )}
 
-            {/* Next up indicator + draw button */}
             <div className="bg-surface-container-lowest rounded-xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] text-center">
               <p className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1">
                 Pick {totalAssigned + 1} of {players.length}
@@ -238,8 +356,9 @@ export default function Setup() {
   )
 }
 
+// ── Dev/commissioner reset ────────────────────────────────────────────────────
+
 function DevResetButton() {
-  const navigate = useNavigate()
   const [resetting, setResetting] = useState(false)
   const [confirm, setConfirm] = useState(false)
 
@@ -258,7 +377,7 @@ function DevResetButton() {
         onClick={() => setConfirm(true)}
         className="w-full py-3 rounded-full border border-dashed border-error/40 text-error text-sm font-bold active:scale-95 transition-transform"
       >
-        DEV: Reset All Data
+        Reset All Data
       </button>
     )
   }
