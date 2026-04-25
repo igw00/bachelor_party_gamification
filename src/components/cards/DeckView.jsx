@@ -113,8 +113,8 @@ export default function DeckView() {
 
   // Cards available in the undrawn deck
   const deckPool = cards.filter((c) => !c.heldByTeamId && !c.played)
-  // Cards that have been played — available for reshuffle when deck is empty
-  const playedPool = cards.filter((c) => c.played)
+  // Cards eligible for reshuffle: played cards OR held-but-not-active (teams can't hoard inactive cards)
+  const playedPool = cards.filter((c) => c.played || (c.heldByTeamId && !c.active))
   const needsReshuffle = deckPool.length === 0 && playedPool.length > 0
 
   // How many draws has my team earned vs. used
